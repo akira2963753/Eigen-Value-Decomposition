@@ -22,7 +22,7 @@ module CORDIC_PE(
     input signed [`DATA_WIDTH-1:0] InX,
     input signed [`DATA_WIDTH-1:0] InY,
     output logic signed [`DATA_WIDTH-1:0] OutX,
-    output loigc signed [`DATA_WIDTH-1:0] OutY);
+    output logic signed [`DATA_WIDTH-1:0] OutY);
 
     localparam J = `ITERATION / `PIPE_STAGE;
 
@@ -36,11 +36,17 @@ module CORDIC_PE(
     logic [`ITERATION-1:0] DIR;
     logic [`ITERATION-1:0] DIR_r;
 
-    // Combinational Wire
+    // CORDIC Core Combinational 
     logic signed [`DATA_WIDTH-1:0] X [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] Y [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] DX [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] DY [0:`PIPE_STAGE-1];
+
+    // Output Scaling Combinational
+    logic signed [`DATA_WIDTH-1:0] X_A;
+    logic signed [`DATA_WIDTH-1:0] X_B;
+    logic signed [`DATA_WIDTH-1:0] Y_A; 
+    logic signed [`DATA_WIDTH-1:0] Y_B;
 
     always_ff @(posedge clk or negedge rst_n) begin : INITIAL_STAGE
         if(!rst_n) begin
@@ -132,5 +138,24 @@ module CORDIC_PE(
             end
         end
     endgenerate
+
+    always_comb begin : OUTPUT_BLOCK
+        if(Mode_r[`PIPE_STAGE-1]) begin 
+            X_A = (X[`PIPE_STAGE-1] >>> 1) + (X[`PIPE_STAGE-1] >>> 3);
+            X_B = (X[`PIPE_STAGE-1] >>> 6) + (X[`PIPE_STAGE-1] >>> 9);
+            Y_A = (Y[`PIPE_STAGE-1] >>> 1) + (Y[`PIPE_STAGE-1] >>> 3);
+            Y_B = (Y[`PIPE_STAGE-1] >>> 6) + (Y[`PIPE_STAGE-1] >>> 9);
+            OutX = X_A - X_B;
+            OutY = Y_A - Y_B;            
+        end
+        else begin
+            X_A = (X[`PIPE_STAGE-1] >>> 1) + (X[`PIPE_STAGE-1] >>> 3);
+            X_B = (X[`PIPE_STAGE-1] >>> 6) + (X[`PIPE_STAGE-1] >>> 9);
+            Y_A = 0;
+            Y_B = 0;
+            OutX = X_A - X_B;
+            OutY = 0;
+        end
+    end
 
 endmodule
