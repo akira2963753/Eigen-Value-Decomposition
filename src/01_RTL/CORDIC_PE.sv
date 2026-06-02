@@ -7,15 +7,12 @@
 * Author:       Marco <harry2963753@gmail.com>
 * Student ID:   M11407439 & B11107027
 * Tool:         VCS & Verdi
-* PS:           Mode=0: Vectoring / Mode=1: Rotation
+* Mode:         0: Vectoring / 1: Rotation
 *
 ******************************************************************************/
+`include "define.vh" 
 
-`define DATA_WIDTH  
-`define PIPE_STAGE  2
-`define ITERATION   8
-
-module CORDIC_PE(
+module CORDIC_PE (
     input clk,
     input rst_n,
     input Mode,
@@ -36,13 +33,13 @@ module CORDIC_PE(
     logic [`ITERATION-1:0] DIR;
     logic [`ITERATION-1:0] DIR_r;
 
-    // CORDIC Core Combinational 
+    // CORDIC Core Combinational Net
     logic signed [`DATA_WIDTH-1:0] X [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] Y [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] DX [0:`PIPE_STAGE-1];
     logic signed [`DATA_WIDTH-1:0] DY [0:`PIPE_STAGE-1];
 
-    // Output Scaling Combinational
+    // Output Magnitude Scaling Combinational Net
     logic signed [`DATA_WIDTH-1:0] X_A;
     logic signed [`DATA_WIDTH-1:0] X_B;
     logic signed [`DATA_WIDTH-1:0] Y_A; 
@@ -75,9 +72,9 @@ module CORDIC_PE(
     generate
         for(s=0; s < `PIPE_STAGE; s++) begin : PIPELINE_BLOCK
             always_comb begin : ITERATION_STAGE
-                if(Mode_r[s]) begin : ROTAIOTN_CORE
-                    X[s] = X_r[s];
-                    Y[s] = Y_r[s];                   
+                X[s] = X_r[s];
+                Y[s] = Y_r[s];   
+                if(Mode_r[s]) begin : ROTAIOTN_CORE                
                     for(int  i = 0; i < J; i++) begin
                         DX[s] = Y[s] >>> (s*J+i);
                         DY[s] = X[s] >>> (s*J+i);
@@ -93,8 +90,6 @@ module CORDIC_PE(
                     end
                 end
                 else begin : VECTORING_CORE
-                    X[s] = X_r[s];
-                    Y[s] = Y_r[s];
                     for(int i = 0; i < J; i++) begin
                         DX[s] = Y[s] >>> (s*J+i);
                         DY[s] = X[s] >>> (s*J+i);
