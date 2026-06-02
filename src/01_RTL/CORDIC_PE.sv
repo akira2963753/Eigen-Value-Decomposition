@@ -19,7 +19,8 @@ module CORDIC_PE (
     input signed [`DATA_WIDTH-1:0] InX,
     input signed [`DATA_WIDTH-1:0] InY,
     output logic signed [`DATA_WIDTH-1:0] OutX,
-    output logic signed [`DATA_WIDTH-1:0] OutY);
+    output logic signed [`DATA_WIDTH-1:0] OutY
+    );
 
     localparam J = `ITERATION / `PIPE_STAGE;
 
@@ -68,9 +69,8 @@ module CORDIC_PE (
         end
     end
 
-    genvar s;
     generate
-        for(s=0; s < `PIPE_STAGE; s++) begin : PIPELINE_BLOCK
+        for(genvar s=0; s < `PIPE_STAGE; s++) begin : PIPELINE_BLOCK
             always_comb begin : ITERATION_STAGE
                 X[s] = X_r[s];
                 Y[s] = Y_r[s];   
