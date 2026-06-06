@@ -9,40 +9,143 @@
 * Tool:         VCS & Verdi
 *
 ******************************************************************************/
-`include "define.vh" 
+`include "define.vh"
 
 module QRD(
     input clk,
     input rst_n,
-    input signed [`DATA_WIDTH-1:0] IN [0:`MATRIX_SIZE-1];
-    output logic signed [`DATA_WIDTH-1:0] OUT [0:`MATRIX_SIZE-1]
-    );
+    input InMode,
+    input signed [`DATA_WIDTH-1:0] InData [0:`MATRIX_SIZE-1],
+    output logic signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1]
+    ); 
 
-    logic signed [`DATA_WIDTH-1:0] InX [0:`MATRIX_SIZE*`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDHT-1:0] InY [0:`MATRIX_SIZE*`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDTH-1:0] OutX [0:`MATRIX_SIZE*`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDTH-1:0] OutX [0:`MATRIX_SIZE*`MATRIX_SIZE-1];
+    // 直接建構 2D Systolic Array，方便我們後面用 Generate，多出來的 Net 不要 Drive 就會被移除
+    logic signed [`DATA_WIDTH-1:0] X_h [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] Y_v [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
+    logic Mode_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
 
-    // Fixed 3 x 3 QR-Based Systolic Array
-    Delay_Unit R0C0(
+    generate
+        for (genvar i = 0; i < `MATRIX_SIZE; i++) begin : GEN_ROW
+            for (genvar j = i; j < `MATRIX_SIZE; j++) begin : GEN_COL
+                if (i == j) begin : GEN_DIAG
+                    if (i == 0) begin : DU_FIRST
+                        Delay_Unit u_DU (
+                            .clk(clk),
+                            .rst_n(rst_n),
+                            .InMode(InMode),
+                            .In(InData[0]),
+                            .Out(X_h[0][0]),
+                            .OutMode(Mode_r[0][0]));
+                    end
+                    else if(i==`MATRIX_SIZE-1) begin : DU_LAST
+                         Delay_Unit u_DU (
+                            .clk(clk),
+                            .rst_n(rst_n),
+                            .InMode(1'b0),
+                            .In(Y_v[i-1][j]),
+                            .Out(X_h[i][j]),
+                            .OutMode());                       
+                    end
+                    else begin : DU_MID
+                        Delay_Unit u_DU (
+                            .clk(clk),
+                            .rst_n(rst_n),
+                            .InMode(Mode_r[i-1][j]),
+                            .In(Y_v[i-1][j]),
+                            .Out(X_h[i][j]),
+                            .OutMode(Mode_r[i][j]));
+                    end
+                end 
+                else begin : GEN_OFFDIAG
+                    CORDIC_PE u_PE (
+                        .clk(clk),
+                        .rst_n(rst_n),
+                        .InMode(Mode_r[i][j-1]),
+                        .InX(X_h[i][j-1]),
+                        .InY((i == 0) ? InData[j] : Y_v[i-1][j]),
+                        .OutX(X_h[i][j]),
+                        .OutY(Y_v[i][j]),
+                        .OutMode(Mode_r[i][j]));
+                end
+            end
+            assign OutData[i] = X_h[i][`MATRIX_SIZE-1];
+        end
+    endgenerate
+
+    /*Delay_Unit ROW0_COL0(
         .clk(clk),
         .rst_n(rst_n),
-        .IN(),
-        .OUT()
-    );
+        .InMode(InMode),
+        .In(IN[0]),
+        .Out(X_h[0][0]),
+        .OutMode(Mode_r[0][0]));
+    
+    CORDIC_PE ROW0_COL1(
+        .clk(clk),
+        .rst_n(rst_n),
+        .InMode(Mode_r[0][0]),
+        .InX(X_h[0][0]),
+        .InY(IN[1]),
+        .OutX(X_h[0][1]),
+        .OutY(Y_v[0][1]),
+        .OutMode(Mode_r[0][1]));
+    
+    CORDIC_PE ROW0_COL2(
+        .clk(clk),
+        .rst_n(rst_n),
+        .InMode(Mode_r[0][1]),
+        .InX(X_h[0][1]),
+        .InY(IN[2]),
+        .OutX(X_h[0][2]),
+        .OutY(Y_v[0][2]),
+        .OutMode(Mode_r[0][2]));
+
+    Delay_Unit ROW1_COL1(
+        .clk(clk),
+        .rst_n(rst_n),
+        .InMode(Mode_r[0][1]),
+        .In(Y_v[0][1]),
+        .Out(X_h[1][1]),
+        .OutMode(Mode_r[1][1]));
+
+    CORDIC_PE ROW1_COL2(
+        .clk(clk),
+        .rst_n(rst_n),
+        .InMode(Mode_r[1][1]),
+        .InX(X_h[1][1]),
+        .InY(Y_v[0][2]),
+        .OutX(X_h[1][2]),
+        .OutY(Y_v[1][2]),
+        .OutMode(Mode_r[1][2]));
+    
+    Delay_Unit ROW2_COL2(
+        .clk(clk),
+        .rst_n(rst_n),
+        .InMode(1'b0),
+        .In(Y_v[1][2]),
+        .Out(X_h[2][2]),
+        .OutMode());*/
 
 endmodule
 
 module Delay_Unit(
     input clk,
     input rst_n,
-    input signed [`DATA_WIDTH-1:0] IN,
-    output logic signed [`DATA_WIDHT-1:0] OUT
+    input InMode,
+    input signed [`DATA_WIDTH-1:0] In,
+    output logic signed [`DATA_WIDTH-1:0] Out,
+    output logic OutMode
     );
     
     always_ff @(posedge clk or negedge rst_n) begin
-        if(!rst_n) OUT <= 0;
-        else OUT <= IN; 
+        if(!rst_n) begin 
+            Out <= 0;
+            OutMode <= 0;
+        end
+        else begin 
+            Out <= In;
+            OutMode <= InMode;
+        end
     end
 
 endmodule

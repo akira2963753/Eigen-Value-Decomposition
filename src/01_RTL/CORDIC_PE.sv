@@ -7,7 +7,7 @@
 * Author:       Marco <harry2963753@gmail.com>
 * Student ID:   M11407439 & B11107027
 * Tool:         VCS & Verdi
-* Mode:         0: Vectoring / 1: Rotation
+* Mode:         1: Vectoring / 0: Rotation
 *
 ******************************************************************************/
 `include "define.vh" 
@@ -15,11 +15,12 @@
 module CORDIC_PE (
     input clk,
     input rst_n,
-    input Mode,
+    input InMode,
     input signed [`DATA_WIDTH-1:0] InX,
     input signed [`DATA_WIDTH-1:0] InY,
     output logic signed [`DATA_WIDTH-1:0] OutX,
-    output logic signed [`DATA_WIDTH-1:0] OutY
+    output logic signed [`DATA_WIDTH-1:0] OutY,
+    output logic signed OutMode
     );
 
     localparam J = `ITERATION / `PIPE_STAGE;
@@ -54,17 +55,17 @@ module CORDIC_PE (
             Mode_r[0] <= 0;
         end
         else begin
-            if(Mode == 0) begin
+            if(InMode) begin
                 // Initial Processing
                 X_r[0] <= (InX < 0)? -InX : InX;
                 Y_r[0] <= (InX < 0)? -InY : InY;
                 InFlip <= (InX < 0);
-                Mode_r[0] <= Mode;
+                Mode_r[0] <= InMode;
             end
             else begin
                 X_r[0] <= (InFlip)? -InX : InX;
                 Y_r[0] <= (InFlip)? -InY : InY;
-                Mode_r[0] <= Mode;
+                Mode_r[0] <= InMode;
             end
         end
     end
@@ -74,7 +75,7 @@ module CORDIC_PE (
             always_comb begin : ITERATION_STAGE
                 X[s] = X_r[s];
                 Y[s] = Y_r[s];   
-                if(Mode_r[s]) begin : ROTAIOTN_CORE                
+                if(!Mode_r[s]) begin : ROTAIOTN_CORE                
                     for(int  i = 0; i < J; i++) begin
                         DX[s] = Y[s] >>> (s*J+i);
                         DY[s] = X[s] >>> (s*J+i);
@@ -126,7 +127,7 @@ module CORDIC_PE (
                 if(!rst_n) for (int i = 0; i < J; i++) DIR_r[s*J+i] <= 0;
                 else begin
                     for(int i = 0; i < J; i++) begin 
-                        if(Mode_r[s]) DIR_r[s*J+i] <= DIR_r[s*J+i];
+                        if(!Mode_r[s]) DIR_r[s*J+i] <= DIR_r[s*J+i];
                         else DIR_r[s*J+i] <= DIR[s*J+i];
                     end                    
                 end
@@ -135,7 +136,7 @@ module CORDIC_PE (
     endgenerate
 
     always_comb begin : OUTPUT_BLOCK
-        if(Mode_r[`PIPE_STAGE-1]) begin 
+        if(!Mode_r[`PIPE_STAGE-1]) begin
             X_A = (X[`PIPE_STAGE-1] >>> 1) + (X[`PIPE_STAGE-1] >>> 3);
             X_B = (X[`PIPE_STAGE-1] >>> 6) + (X[`PIPE_STAGE-1] >>> 9);
             Y_A = (Y[`PIPE_STAGE-1] >>> 1) + (Y[`PIPE_STAGE-1] >>> 3);
@@ -151,6 +152,7 @@ module CORDIC_PE (
             OutX = X_A - X_B;
             OutY = 0;
         end
+        OutMode = Mode_r[`PIPE_STAGE-1];
     end
 
 endmodule

@@ -1,0 +1,28 @@
+<mxfile host="Electron">
+  <diagram name="第1頁" id="xZpSjKNrceopRA1WhAzu">
+    <mxGraphModel dx="774" dy="610" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=default;shadow=1;glass=0;strokeWidth=2;" value="&lt;font face=&quot;Garamond&quot; style=&quot;font-size: 19px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Systolic Array-Based QRD&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="200" width="200" x="280" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-3" edge="1" parent="1" source="TP3WlDAC-5j0AsDRaiJ1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=2;endSize=4;endArrow=block;endFill=1;" target="TP3WlDAC-5j0AsDRaiJ1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=default;strokeWidth=2;shadow=1;" value="&lt;font face=&quot;Garamond&quot; style=&quot;font-size: 19px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Input Buffer&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="200" x="280" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=default;strokeWidth=2;shadow=1;rotation=90;" value="&lt;font face=&quot;Garamond&quot;&gt;&lt;span style=&quot;font-size: 19px;&quot;&gt;&lt;b&gt;Matrix Transposer&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="200" x="435" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=default;strokeWidth=2;shadow=1;rotation=0;" value="&lt;font face=&quot;Garamond&quot;&gt;&lt;span style=&quot;font-size: 19px;&quot;&gt;&lt;b&gt;EVD Controller&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="120" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="TP3WlDAC-5j0AsDRaiJ1-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=default;strokeWidth=2;shadow=1;rotation=90;" value="&lt;font face=&quot;Garamond&quot;&gt;&lt;span style=&quot;font-size: 19px;&quot;&gt;&lt;b&gt;EV Register&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="200" x="462" y="293" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
