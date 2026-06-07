@@ -19,7 +19,7 @@ module QRD(
     output logic signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1]
     ); 
 
-    // 直接建構 2D Systolic Array，方便我們後面用 Generate，多出來的 Net 不要 Drive 就會被移除
+    // 直接建構 2D Systolic Array，方便我們後面用 Generate，多出來的 Net 沒 Drive 就會被移除
     logic signed [`DATA_WIDTH-1:0] X_h [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] Y_v [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic Mode_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];

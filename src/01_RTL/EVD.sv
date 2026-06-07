@@ -26,6 +26,8 @@ module EVD(
 
     logic signed [`DATA_WIDTH-1:0] BUFIn [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] BUFOut [0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] U_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] QRDOut_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
 
     always_ff @(posedge clk or negedge rst_n) begin : FSM
         if(!rst_n) state <= IDLE;
@@ -38,11 +40,12 @@ module EVD(
                 next_state = (InValid)? PROCESS_R : IDLE;
             end
             PROCESS_R: begin
-                next_state = (cnt==3'd4)? PROCESS_T : PROCESS_R;
-            end
-            PROCESS_T: begin
+                next_state = (cnt==3'd2)? PROCESS_U : PROCESS_R;
             end
             PROCESS_U: begin
+                next_state = (cnt==3'd5)? PROCESS_T : PROCESS_U;
+            end
+            PROCESS_T: begin
                 
             end
             OUT: begin
@@ -53,18 +56,51 @@ module EVD(
 
     always_ff @(posedge clk or negedge rst_n) begin
         if(!rst_n) cnt <= 0;
-        else if(state==PROCESS_R) cnt <= cnt + 1;
+        else if(state!=IDLE) cnt <= cnt + 1;
         else cnt <= 0;
     end
 
     always_comb begin : INPUT_PROCESSOR
         if(state==PROCESS_R) begin
-            BUFIn = InData;
+            for(int m = 0; m < `MATRIX_SIZE; m++) BUFIn[m] = InData[m];
         end
-        else if(state==PROCESS_R) begin
-            
+        else if(state==PROCESS_U) begin
+            for(int m = 0; m < `MATRIX_SIZE; m++) BUFIn[m] = U_r[m][cnt-2];
+        end
+        else if(state==PROCESS_T) begin
+            BUFIn[0] <= QRDOut_r[0][2];
+            BUFIn[1] <= QRDOut_r[1][1];
+            BUFIn[0] <= QRDOut_r[2][0];
         end
     end
+
+    always_ff @(posedge clk) begin : OUTPUT_PROCESSOR
+        QRDOut_r[0][0] <= QRDOut[0];
+        QRDOut_r[0][1] <= QRDOut_r[0][0];
+        QRDOut_r[0][2] <= QRDOut_r[0][1];
+        QRDOut_r[1][0] <= QRDOut[1];
+        QRDOut_r[1][1] <= QRDOut_r[0][1];
+        QRDOut_r[2][0] <= QRDOut[2];
+    end
+
+    always @(posedge clk) begin
+        if(state==IDLE) begin
+            U_r[0][0] <= 1;
+            U_r[0][1] <= 0;
+            U_r[0][2] <= 0;
+            U_r[1][0] <= 0;
+            U_r[1][1] <= 1;
+            U_r[1][2] <= 0;
+            U_r[2][0] <= 0;
+            U_r[2][1] <= 0;
+            U_r[2][2] <= 1;
+        end
+        else if(state==PROCESS_T) begin
+            
+        end
+        else
+    end
+
 
     Input_Buffer u_INBUF(
         .clk(clk),
