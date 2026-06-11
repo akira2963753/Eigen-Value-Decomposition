@@ -1,11 +1,11 @@
 <mxfile host="Electron">
   <diagram name="第1頁" id="TgPVDtcQjBQSSoABPI3-">
-    <mxGraphModel dx="911" dy="718" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1117" dy="678" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="vfxmfe084Ka6NjtYIDoz-61" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=default;opacity=50;glass=0;shadow=1;" value="" vertex="1">
-          <mxGeometry height="421" width="885.11" x="74.89" y="40" as="geometry" />
+        <mxCell id="vfxmfe084Ka6NjtYIDoz-61" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=default;opacity=30;glass=0;shadow=1;" value="" vertex="1">
+          <mxGeometry height="421" width="880" x="80" y="40" as="geometry" />
         </mxCell>
         <mxCell id="vfxmfe084Ka6NjtYIDoz-55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=0;glass=0;shadow=1;perimeterSpacing=3;container=0;strokeColor=#b85450;fontFamily=Garamond;fontStyle=1;fillColor=#f8cecc;arcSize=4;" value="" vertex="1">
           <mxGeometry height="320" width="250" x="695" y="110" as="geometry" />
@@ -172,7 +172,7 @@
         <mxCell id="QNCQDY-ayvtuFV0KOLpm-67" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;strokeWidth=1;container=0;fontFamily=Garamond;fontStyle=1" value="&lt;span&gt;&lt;font style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;×4&lt;/span&gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
           <mxGeometry height="19.53" width="26" x="552" y="395.47" as="geometry" />
         </mxCell>
-        <mxCell id="QNCQDY-ayvtuFV0KOLpm-68" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Garamond;fontStyle=1" value="&lt;font style=&quot;font-size: 10px; color: rgb(0, 0, 0);&quot;&gt;Rotation Mode (u based on Vectoring Mode)&lt;/font&gt;" vertex="1">
+        <mxCell id="QNCQDY-ayvtuFV0KOLpm-68" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Garamond;fontStyle=1" value="&lt;font style=&quot;font-size: 10px; color: rgb(0, 0, 0);&quot;&gt;Rotation Mode (u based on RDR)&lt;/font&gt;" vertex="1">
           <mxGeometry height="15.05" width="197.81" x="356.11" y="279.52" as="geometry" />
         </mxCell>
         <mxCell id="QNCQDY-ayvtuFV0KOLpm-70" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Garamond;fontStyle=1" value="&lt;font style=&quot;font-size: 14px; color: rgb(120, 76, 105);&quot;&gt;Iteration Stage 1&lt;/font&gt;" vertex="1">
@@ -429,7 +429,7 @@
             <mxPoint x="689.76" y="259.76" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vfxmfe084Ka6NjtYIDoz-59" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;strokeWidth=1;align=center;fontFamily=Garamond;fontStyle=1;glass=0;shadow=0;" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Rotaional Direction Register&lt;/font&gt;" vertex="1">
+        <mxCell id="vfxmfe084Ka6NjtYIDoz-59" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;strokeWidth=1;align=center;fontFamily=Garamond;fontStyle=1;glass=0;shadow=0;" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Rotaional Direction Register (RDR)&lt;/font&gt;" vertex="1">
           <mxGeometry height="13" width="254" x="323.79" y="260.67" as="geometry" />
         </mxCell>
         <mxCell id="vfxmfe084Ka6NjtYIDoz-62" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Garamond;fontStyle=1;rotation=0;" value="&lt;font style=&quot;font-size: 21px; color: rgb(80, 80, 80);&quot;&gt;CORDIC Processing Element (PE)&lt;/font&gt;" vertex="1">
