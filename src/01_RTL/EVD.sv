@@ -16,22 +16,24 @@ module EVD(
     input rst_n,
     input InValid,
     input signed [`DATA_WIDTH-1:0] InData [0:`MATRIX_SIZE-1],
-    output signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1],
-    output OutValid
+    output logic signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1],
+    output logic OutValid
     );
 
     typedef enum logic [1:0] {IDLE, PROCESS, OUT} STATETYPE; 
     STATETYPE state, next_state;
+    logic [1:0] io_cnt;
     logic [3:0] cnt;
     logic [2:0] iter_cnt;
-    logic ExIn;
+    logic InMode;
 
     logic signed [`DATA_WIDTH-1:0] U_REG [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] EV_REG [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] IDUIn [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] IDUOut [0:`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDTH-1:0] OutD_BUF [0:1];
     logic signed [`DATA_WIDTH-1:0] QRDOut [0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] TEMP [0:2];
+    
     
     always_ff @(posedge clk or negedge rst_n) begin : FSM
         if(!rst_n) state <= IDLE;
@@ -41,32 +43,34 @@ module EVD(
     always_comb begin : FSM_CONTROLL
         case(state)
             IDLE: begin // 當 InValid = 1 時，啟動 EVD
-                next_state = (InValid)? PROCESS : IDLE;
+                next_state = (InValid && io_cnt == 2'd2)? PROCESS : IDLE;
             end
             PROCESS: begin
-                next_state = (iter_cnt==3'd7 && cnt==4'd2)? OUT : PROCESS;
+                next_state = (iter_cnt==3'd7)? OUT : PROCESS;
             end
             OUT: begin
-                next_state = (cnt==4'd6)? IDLE : OUT;
+                next_state = (io_cnt==4'd3)? IDLE : OUT;
             end
         endcase
     end
 
+    always_ff @(posedge clk or negedge rst_n) begin : IO_COUNTER
+        if(!rst_n) io_cnt <= 0;
+        else if(state==IDLE&&InValid) io_cnt <= io_cnt + 1;
+        else if(state==OUT) io_cnt <= io_cnt + 1;
+        else io_cnt <= 0;
+    end
+
     always_ff @(posedge clk or negedge rst_n) begin : COUNTER
         if(!rst_n) cnt <= 0;
-        else if(state==PROCESS) cnt <= (cnt==4'd12)? 0 : cnt + 1;
+        else if(state==PROCESS) cnt <= (cnt==4'd14)? 0 : cnt + 1;
         else if(state==OUT) cnt <= cnt + 1;
         else cnt <= 0;
     end
 
     always_ff @(posedge clk or negedge rst_n) begin : ITERATION
         if(!rst_n) iter_cnt <= 0;
-        else if(cnt==4'd12) iter_cnt <= iter_cnt + 1; 
-    end
-
-    always_ff @(posedge clk) begin : EXIN_SIGNAL
-        if(state==IDLE) ExIn <= 1;
-        else if(cnt==4'd8) ExIn <= 0; 
+        else if(cnt==4'd14) iter_cnt <= iter_cnt + 1; 
     end
 
     IDU u_IDU(
@@ -76,63 +80,56 @@ module EVD(
         .OutData(IDUOut));
 
     always_comb begin : INPUT_PROCESSOR
-        if(state==PROCESS) begin
+        if(state==IDLE&&InValid) begin
+            InMode = (io_cnt==0);
+            for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = InData[m];
+        end
+        else if(state==PROCESS) begin
+            InMode = (cnt==4'd12);
             case(cnt) 
-                4'd0: begin
-                    if(ExIn) begin
-                        for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = InData[m];
-                    end 
-                    else begin
-                        IDUIn[0] = OutD_BUF[1];
-                        IDUIn[1] = 0;
-                        IDUIn[2] = 0;
-                    end
+                4'd0: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[m][0];
+                4'd1: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[m][1];
+                4'd2: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[m][2];
+                4'd5: begin
+                    IDUIn[0] = TEMP[0];     // R00
+                    IDUIn[1] = TEMP[1];     // R01
+                    IDUIn[2] = TEMP[2];     // R02
                 end
-                4'd1: begin
-                    if(ExIn) begin
-                        for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = InData[m];
-                    end 
-                    else begin
-                        IDUIn[0] = OutD_BUF[1];
-                        IDUIn[1] = QRDOut[1];
-                        IDUIn[2] = 0;
-                    end                    
-                end
-                4'd2: begin
-                    if(ExIn) begin
-                        for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = InData[m];
-                    end 
-                    else begin
-                        IDUIn[0] = OutD_BUF[1];
-                        IDUIn[1] = QRDOut[1];
-                        IDUIn[2] = QRDOut[2];
-                    end                    
-                end
-                4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[0][m];
-                4'd4: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[1][m];
-                4'd5: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = U_REG[2][m];
                 4'd6: begin
-                    IDUIn[0] = OutD_BUF[1];
-                    IDUIn[1] = 0;
-                    IDUIn[2] = 0;
+                    IDUIn[0] = 0;           // R10
+                    IDUIn[1] = TEMP[0];     // R11
+                    IDUIn[2] = QRDOut[1];   // R12
                 end
                 4'd7: begin
-                    IDUIn[0] = OutD_BUF[1];
-                    IDUIn[1] = QRDOut[1];
-                    IDUIn[2] = 0;
+                    IDUIn[0] = 0;           // R20
+                    IDUIn[1] = 0;           // R21
+                    IDUIn[2] = TEMP[1];     // R22
                 end
-                4'd8: begin
-                    IDUIn[0] = OutD_BUF[1];
-                    IDUIn[1] = QRDOut[1];
-                    IDUIn[2] = QRDOut[2];
+                4'd12: begin
+                    IDUIn[0] = TEMP[0];     // T00
+                    IDUIn[1] = QRDOut[1];   // T10
+                    IDUIn[2] = QRDOut[2];   // T20           
+                end
+                4'd13: begin
+                    IDUIn[0] = TEMP[1];     // T01
+                    IDUIn[1] = QRDOut[1];   // T11
+                    IDUIn[2] = QRDOut[2];   // T21           
+                end
+                4'd14: begin
+                    IDUIn[0] = TEMP[2];     // T02
+                    IDUIn[1] = QRDOut[1];   // T12
+                    IDUIn[2] = QRDOut[2];   // T22                       
                 end
                 default: for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = 0;
             endcase
         end
-        else for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = 0;
+        else begin 
+            for(int m = 0; m < `MATRIX_SIZE; m++) IDUIn[m] = 0;
+            InMode = 0;
+        end
     end
 
-    always_ff @(posedge clk) begin : U_REG
+    always_ff @(posedge clk) begin : U_REG_BLOCK
         if(state==IDLE) begin
             for(int m = 0; m < `MATRIX_SIZE; m++) begin
                 for(int n = 0; n < `MATRIX_SIZE; n++) begin
@@ -143,22 +140,22 @@ module EVD(
         else begin
             if(state == PROCESS) begin
                 case(cnt) 
-                    4'd7: begin
+                    4'd5: begin
                         U_REG[0][0] <= QRDOut[0];
                     end
-                    4'd8: begin
+                    4'd6: begin
                         U_REG[0][1] <= QRDOut[0];
                     end
-                    4'd9: begin
+                    4'd7: begin
                         U_REG[0][2] <= QRDOut[0];
                         U_REG[1][0] <= QRDOut[1];
                         U_REG[2][0] <= QRDOut[2];
                     end
-                    4'd10: begin
+                    4'd8: begin
                         U_REG[1][1] <= QRDOut[1];
                         U_REG[2][1] <= QRDOut[2];                        
                     end
-                    4'd11: begin
+                    4'd9: begin
                         U_REG[1][2] <= QRDOut[1];
                         U_REG[2][2] <= QRDOut[2];                        
                     end
@@ -168,19 +165,27 @@ module EVD(
     end
 
     always_ff @(posedge clk or negedge rst_n) begin : OUTPUT_BUFFER
-        if(!rst_n) for(int m = 0; m < 2; m++) begin 
-            OutD_BUF[m] <= 0;
+        if(!rst_n) for(int m = 0; m < 4; m++) begin 
+            TEMP[m] <= 0;
         end
         else begin 
-            OutD_BUF[1] <= OutD_BUF[0];
-            OutD_BUF[0] <= QRDOut[0];
+            case(cnt) 
+                4'd2: TEMP[0] <= QRDOut[0];     // Save R00
+                4'd3: TEMP[1] <= QRDOut[0];     // Save R01
+                4'd4: TEMP[2] <= QRDOut[0];     // Save R02
+                4'd5: TEMP[0] <= QRDOut[1];     // Save R11
+                4'd6: TEMP[1] <= QRDOut[2];     // Save R22
+                4'd10: TEMP[0] <= QRDOut[0];    // Save T00
+                4'd11: TEMP[1] <= QRDOut[0];    // Save T01
+                4'd12: TEMP[2] <= QRDOut[0];    // Save T02 
+            endcase
         end
     end
 
     QRD u_QRD(
         .clk(clk),
         .rst_n(rst_n),
-        .InMode(),
+        .InMode(InMode),
         .InData(IDUOut),
         .OutData(QRDOut));
 
@@ -188,11 +193,11 @@ module EVD(
         if(!rst_n) begin
             for(int m = 0; m < `MATRIX_SIZE; m++) EV_REG[m] <= 0;
         end
-        else if(state==PROCESS && iter_cnt == 4'd7) begin
+        else if(state==PROCESS && iter_cnt == 4'd6) begin
             case(cnt) 
-                4'd0: EV_REG[0] <= OutD_BUF[1];
-                4'd1: EV_REG[1] <= QRDOut[1];
-                4'd2: EV_REG[2] <= QRDOut[2];
+                4'd10: EV_REG[0] <= QRDOut[0];  // T00 
+                4'd13: EV_REG[1] <= QRDOut[1];  // T11
+                4'd14: EV_REG[2] <= QRDOut[2];  // T22
             endcase
         end
     end
@@ -200,11 +205,11 @@ module EVD(
     always_comb begin: OUTPUT_BLOCK 
         if(state==OUT) begin
             OutValid = 1;
-            case(cnt)
-                4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = EV_REG[m]; 
-                4'd4: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[m][0];
-                4'd5: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[m][1];
-                4'd6: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[m][2];
+            case(io_cnt)
+                4'd0: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = EV_REG[m]; 
+                4'd1: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[0][m];
+                4'd2: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[1][m];
+                4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[2][m];
                 default: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = 0;
             endcase
         end
@@ -216,29 +221,33 @@ module EVD(
 
 endmodule
 
-
 // Input Delay Unit
 module IDU(
     input clk,
     input rst_n,
     input signed [`DATA_WIDTH-1:0] InData [0:`MATRIX_SIZE-1],
-    output signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1]
+    output logic signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1]
     );
 
-    logic signed [`DATA_WIDTH-1:0] InBUF [0:2];
+    logic signed [`DATA_WIDTH-1:0] InBUF1;
+    logic signed [`DATA_WIDTH-1:0] InBUF2 [0:2];
 
     always_comb begin : INBUF_OUT_BLOCK
         OutData[0] = InData[0];
-        OutData[1] = InBUF[0];
-        OutData[2] = InBUF[2];
+        OutData[1] = InBUF1;
+        OutData[2] = InBUF2[2];
     end
 
     always_ff @(posedge clk or negedge rst_n) begin : INBUF_BLOCK
-        if(!rst_n) for(int m = 0; m < 3; m++) InBUF[m] <= 0; 
+        if(!rst_n) begin
+            InBUF1 <= 0;
+            for(int m = 0; m < 3; m++) InBUF2[m] <= 0;
+        end 
         else begin
-            InBUF[0] <= InData[1];
-            InBUF[1] <= InData[2];
-            InBUF[2] <= InBUF[1];
+            InBUF1 <= InData[1];
+            InBUF2[0] <= InData[2];
+            InBUF2[1] <= InBUF2[0];
+            InBUF2[2] <= InBUF2[1];
         end
     end
 

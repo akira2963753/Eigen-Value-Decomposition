@@ -5,4 +5,5 @@
 `define ITERATION   8
 `define MATRIX_SIZE 3
 `define CLK_PERIOD  10
-`define DAT_PATH    "../00_TESTBED/src/" 
+`define DAT_PATH    "../00_TESTBED/src/"
+`define I           18'h01000

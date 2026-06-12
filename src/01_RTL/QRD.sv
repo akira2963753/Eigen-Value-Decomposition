@@ -19,11 +19,12 @@ module QRD(
     output logic signed [`DATA_WIDTH-1:0] OutData [0:`MATRIX_SIZE-1]
     ); 
 
-    // 直接建構 2D Systolic Array，方便我們後面用 Generate，多出來的 Net 沒 Drive 就會被移除
+    // 直接建構 2D Systolic Array，方便後面用 Generate，多出來的 Net 沒 Drive 就會被移除
     logic signed [`DATA_WIDTH-1:0] X_h [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] Y_v [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic Mode_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
 
+    /*
     generate
         for (genvar i = 0; i < `MATRIX_SIZE; i++) begin : GEN_ROW
             for (genvar j = i; j < `MATRIX_SIZE; j++) begin : GEN_COL
@@ -71,12 +72,13 @@ module QRD(
             assign OutData[i] = X_h[i][`MATRIX_SIZE-1];
         end
     endgenerate
+    */
 
-    /*Delay_Unit ROW0_COL0(
+    Delay_Unit ROW0_COL0(
         .clk(clk),
         .rst_n(rst_n),
         .InMode(InMode),
-        .In(IN[0]),
+        .In(InData[0]),
         .Out(X_h[0][0]),
         .OutMode(Mode_r[0][0]));
     
@@ -85,7 +87,7 @@ module QRD(
         .rst_n(rst_n),
         .InMode(Mode_r[0][0]),
         .InX(X_h[0][0]),
-        .InY(IN[1]),
+        .InY(InData[1]),
         .OutX(X_h[0][1]),
         .OutY(Y_v[0][1]),
         .OutMode(Mode_r[0][1]));
@@ -95,12 +97,12 @@ module QRD(
         .rst_n(rst_n),
         .InMode(Mode_r[0][1]),
         .InX(X_h[0][1]),
-        .InY(IN[2]),
+        .InY(InData[2]),
         .OutX(X_h[0][2]),
         .OutY(Y_v[0][2]),
         .OutMode(Mode_r[0][2]));
 
-    Delay_Unit ROW1_COL1(
+    Delay2_Unit ROW1_COL1(
         .clk(clk),
         .rst_n(rst_n),
         .InMode(Mode_r[0][1]),
@@ -118,13 +120,12 @@ module QRD(
         .OutY(Y_v[1][2]),
         .OutMode(Mode_r[1][2]));
     
-    Delay_Unit ROW2_COL2(
-        .clk(clk),
-        .rst_n(rst_n),
-        .InMode(1'b0),
-        .In(Y_v[1][2]),
-        .Out(X_h[2][2]),
-        .OutMode());*/
+    assign X_h[2][2] = Y_v[1][2];
+
+    always_comb begin    
+        for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = X_h[m][`MATRIX_SIZE-1];
+    end
+    
 
 endmodule
 
@@ -149,3 +150,35 @@ module Delay_Unit(
     end
 
 endmodule
+
+module Delay2_Unit(
+    input clk,
+    input rst_n,
+    input InMode,
+    input signed [`DATA_WIDTH-1:0] In,
+    output logic signed [`DATA_WIDTH-1:0] Out,
+    output logic OutMode
+    );
+    
+    logic signed [`DATA_WIDTH-1:0] In_r;
+    logic InMode_r [0:1];
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if(!rst_n) begin 
+            Out <= 0;
+            OutMode <= 0;
+            In_r <= 0;
+            InMode_r[0] <= 0;
+            InMode_r[1] <= 0;
+        end
+        else begin 
+            In_r <= In;
+            InMode_r[0] <= InMode;
+            InMode_r[1] <= InMode_r[0];
+            Out <= In_r;
+            OutMode <= InMode_r[1];
+        end
+    end
+
+endmodule
+
