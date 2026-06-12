@@ -29,6 +29,17 @@ module TESTBED();
     logic signed [`DATA_WIDTH-1:0] out_data [0:`MATRIX_SIZE-1];
     logic out_valid;
 
+`ifdef GATE_SIM
+    logic [`MATRIX_SIZE*`DATA_WIDTH-1:0] in_data_flat, out_data_flat;
+
+    always_comb begin
+        for (int i = 0; i < `MATRIX_SIZE; i++) begin
+            in_data_flat[i*`DATA_WIDTH +: `DATA_WIDTH] = in_data[i];
+            out_data[i] = out_data_flat[i*`DATA_WIDTH +: `DATA_WIDTH];
+        end
+    end
+`endif
+
     //=============================================================
     // -------------------------- Memory --------------------------
     //=============================================================
@@ -49,8 +60,13 @@ module TESTBED();
         .clk(clk),
         .rst_n(rst_n),
         .InValid(in_valid),
+`ifdef GATE_SIM
+        .InData(in_data_flat),
+        .OutData(out_data_flat),
+`else
         .InData(in_data),
         .OutData(out_data),
+`endif
         .OutValid(out_valid)
     );
 
