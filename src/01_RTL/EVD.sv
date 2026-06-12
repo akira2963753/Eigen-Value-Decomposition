@@ -51,6 +51,7 @@ module EVD(
             OUT: begin
                 next_state = (io_cnt==4'd3)? IDLE : OUT;
             end
+            default: next_state = 0;
         endcase
     end
 
@@ -210,7 +211,6 @@ module EVD(
                 4'd1: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[0][m];
                 4'd2: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[1][m];
                 4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[2][m];
-                default: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = 0;
             endcase
         end
         else begin
