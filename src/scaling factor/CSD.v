@@ -1,11 +1,11 @@
 // ================================================================================
 // Design Name	: csd_scale
-// Function		: Scale signed input with a CSD shift-and-add network
-// File Name	: src/scaling factor/CSD.v
-// Author		: Michael Su, Sr. Consultant, SiCADA, Taiwan
-// Date			: 2026-06-13
-// Version		: 1.0
-// GenAI		: GPT-5 (OpenAI, 2026-06)
+// Function			: Scale signed input with a CSD shift-and-add network
+// File Name		: src/scaling factor/CSD.v
+// Author				: Michael Su, Sr. Consultant, SiCADA, Taiwan
+// Date					: 2026-06-13
+// Version			: 1.0
+// GenAI				: GPT-5 (OpenAI, 2026-06)
 // ================================================================================
 
 module csd_scale #(
@@ -22,6 +22,7 @@ module csd_scale #(
 
 	assign input_ext = {{(ACC_WIDTH-DATA_WIDTH){scale_in[DATA_WIDTH-1]}}, scale_in} ;
 
+	// Per-term truncation is intentional for the low-area CSD approximation.
 	assign scaled_sum = (input_ext >>> 1)
 		+ (input_ext >>> 3)
 		+ (input_ext >>> 14)

@@ -1,11 +1,11 @@
 // ================================================================================
 // Design Name	: direct_mult_scale
-// Function		: Scale signed input with a constant multiplier
-// File Name	: src/scaling factor/ori.v
-// Author		: Michael Su, Sr. Consultant, SiCADA, Taiwan
-// Date			: 2026-06-13
-// Version		: 1.0
-// GenAI		: GPT-5 (OpenAI, 2026-06)
+// Function			: Scale signed input with a constant multiplier
+// File Name		: src/scaling factor/ori.v
+// Author				: Michael Su, Sr. Consultant, SiCADA, Taiwan
+// Date					: 2026-06-13
+// Version			: 1.0
+// GenAI				: GPT-5 (OpenAI, 2026-06)
 // ================================================================================
 
 module direct_mult_scale #(

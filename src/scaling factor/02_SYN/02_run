@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "${script_dir}"
+
+if ! command -v dc_shell >/dev/null 2>&1; then
+	echo "ERROR: dc_shell is not available in PATH." >&2
+	exit 127
+fi
+
+dc_shell -f syn90.tcl 2>&1 | tee synthesis.log
