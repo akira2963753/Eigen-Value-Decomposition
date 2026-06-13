@@ -32,7 +32,7 @@ module EVD(
     logic signed [`DATA_WIDTH-1:0] IDUIn [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] IDUOut [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] QRDOut [0:`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDTH-1:0] TEMP [0:2];
+    logic signed [`DATA_WIDTH-1:0] TEMP [0:4];
     
     
     always_ff @(posedge clk or negedge rst_n) begin : FSM
@@ -97,14 +97,14 @@ module EVD(
                     IDUIn[2] = TEMP[2];     // R02
                 end
                 4'd6: begin
-                    IDUIn[0] = 0;           // R10
+                    IDUIn[0] = TEMP[3];     // R10
                     IDUIn[1] = TEMP[0];     // R11
                     IDUIn[2] = QRDOut[1];   // R12
                 end
                 4'd7: begin
-                    IDUIn[0] = 0;           // R20
-                    IDUIn[1] = 0;           // R21
-                    IDUIn[2] = TEMP[1];     // R22
+                    IDUIn[0] = TEMP[4];     // R20
+                    IDUIn[1] = TEMP[1];     // R21
+                    IDUIn[2] = TEMP[2];     // R22
                 end
                 4'd12: begin
                     IDUIn[0] = TEMP[0];     // T00
@@ -173,9 +173,16 @@ module EVD(
             case(cnt) 
                 4'd2: TEMP[0] <= QRDOut[0];     // Save R00
                 4'd3: TEMP[1] <= QRDOut[0];     // Save R01
-                4'd4: TEMP[2] <= QRDOut[0];     // Save R02
-                4'd5: TEMP[0] <= QRDOut[1];     // Save R11
-                4'd6: TEMP[1] <= QRDOut[2];     // Save R22
+                4'd4: begin 
+                    TEMP[2] <= QRDOut[0];       // Save R02
+                    TEMP[3] <= QRDOut[1];       // Save R10    
+                    TEMP[4] <= QRDOut[2];       // Save R20
+                end
+                4'd5: begin 
+                    TEMP[0] <= QRDOut[1];       // Save R11
+                    TEMP[1] <= QRDOut[2];       // Save R21
+                end
+                4'd6: TEMP[2] <= QRDOut[2];     // Save R22
                 4'd10: TEMP[0] <= QRDOut[0];    // Save T00
                 4'd11: TEMP[1] <= QRDOut[0];    // Save T01
                 4'd12: TEMP[2] <= QRDOut[0];    // Save T02 
