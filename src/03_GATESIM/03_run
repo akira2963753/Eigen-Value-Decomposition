@@ -1,1 +1,1 @@
-vcs -full64 -debug_access+all -R +v2k -f file.f +neg_tchk -neg_delay +define+GATE_SIM
+vcs -full64 -debug_access+all -R +v2k -f file.f +neg_tchk -negdelay +define+GATE_SIM +lint=TFIPC-L
