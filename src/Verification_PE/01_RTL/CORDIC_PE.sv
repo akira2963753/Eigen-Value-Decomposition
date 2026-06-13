@@ -42,10 +42,8 @@ module CORDIC_PE (
     logic signed [`DATA_WIDTH-1:0] DY [0:`PIPE_STAGE-1];
 
     // Output Magnitude Scaling Combinational Net
-    logic signed [`DATA_WIDTH-1:0] X_A;
-    logic signed [`DATA_WIDTH-1:0] X_B;
-    logic signed [`DATA_WIDTH-1:0] Y_A; 
-    logic signed [`DATA_WIDTH-1:0] Y_B;
+    logic signed [`DATA_WIDTH*2-1:0] X_Mul;
+    logic signed [`DATA_WIDTH*2-1:0] Y_Mul;
 
     always_ff @(posedge clk or negedge rst_n) begin : INITIAL_STAGE
         if(!rst_n) begin
@@ -136,22 +134,10 @@ module CORDIC_PE (
     endgenerate
 
     always_comb begin : OUTPUT_BLOCK
-        if(!Mode_r[`PIPE_STAGE-1]) begin
-            X_A = (X[`PIPE_STAGE-1] >>> 1) + (X[`PIPE_STAGE-1] >>> 3);
-            X_B = (X[`PIPE_STAGE-1] >>> 6) + (X[`PIPE_STAGE-1] >>> 9);
-            Y_A = (Y[`PIPE_STAGE-1] >>> 1) + (Y[`PIPE_STAGE-1] >>> 3);
-            Y_B = (Y[`PIPE_STAGE-1] >>> 6) + (Y[`PIPE_STAGE-1] >>> 9);
-            OutX = X_A - X_B;
-            OutY = Y_A - Y_B;            
-        end
-        else begin
-            X_A = (X[`PIPE_STAGE-1] >>> 1) + (X[`PIPE_STAGE-1] >>> 3);
-            X_B = (X[`PIPE_STAGE-1] >>> 6) + (X[`PIPE_STAGE-1] >>> 9);
-            Y_A = 0;
-            Y_B = 0;
-            OutX = X_A - X_B;
-            OutY = 0;
-        end
+        X_Mul = X[`PIPE_STAGE-1] * `K_INV;
+        OutX = X_Mul[`DATA_WIDTH + `K_INV_FRAC - 1 : `K_INV_FRAC];
+        Y_Mul = Y[`PIPE_STAGE-1] * `K_INV;
+        OutY = Y_Mul[`DATA_WIDTH + `K_INV_FRAC - 1 : `K_INV_FRAC];
         OutMode = Mode_r[`PIPE_STAGE-1];
     end
 
