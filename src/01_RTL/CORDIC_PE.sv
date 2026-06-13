@@ -135,9 +135,9 @@ module CORDIC_PE (
 
     always_comb begin : OUTPUT_BLOCK
         X_Mul = X[`PIPE_STAGE-1] * `K_INV;
-        OutX = X_Mul[`DATA_WIDTH + `DATA_FRAC - 1 : `DATA_FRAC];
+        OutX = X_Mul[`DATA_WIDTH + `K_INV_FRAC - 1 : `K_INV_FRAC];
         Y_Mul = Y[`PIPE_STAGE-1] * `K_INV;
-        OutY = Y_Mul[`DATA_WIDTH + `DATA_FRAC - 1 : `DATA_FRAC];
+        OutY = Y_Mul[`DATA_WIDTH + `K_INV_FRAC - 1 : `K_INV_FRAC];
         OutMode = Mode_r[`PIPE_STAGE-1];
     end
 
