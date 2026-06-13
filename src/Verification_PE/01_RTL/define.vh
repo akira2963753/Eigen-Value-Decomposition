@@ -9,4 +9,4 @@
 `define DAT_PATH    "../00_TESTBED/src/"
 `define I           18'h01000
 `define K_INV_FRAC  14
-`define K_INV       14'sd9949
+`define K_INV       15'sd9949

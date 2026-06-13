@@ -51,7 +51,7 @@ module EVD(
             OUT: begin
                 next_state = (io_cnt==4'd3)? IDLE : OUT;
             end
-            default: next_state = 0;
+            default: next_state = IDLE;
         endcase
     end
 

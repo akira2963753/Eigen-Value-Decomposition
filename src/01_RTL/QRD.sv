@@ -23,6 +23,7 @@ module QRD(
     logic signed [`DATA_WIDTH-1:0] X_h [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] Y_v [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic Mode_r [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
+    logic Pass;
 
     /*
     generate
@@ -86,6 +87,7 @@ module QRD(
         .clk(clk),
         .rst_n(rst_n),
         .InMode(Mode_r[0][0]),
+        .Pass(1'b0),
         .InX(X_h[0][0]),
         .InY(InData[1]),
         .OutX(X_h[0][1]),
@@ -96,6 +98,7 @@ module QRD(
         .clk(clk),
         .rst_n(rst_n),
         .InMode(Mode_r[0][1]),
+        .Pass(1'b0),
         .InX(X_h[0][1]),
         .InY(InData[2]),
         .OutX(X_h[0][2]),
@@ -108,12 +111,14 @@ module QRD(
         .InMode(Mode_r[0][1]),
         .In(Y_v[0][1]),
         .Out(X_h[1][1]),
-        .OutMode(Mode_r[1][1]));
+        .OutMode(Mode_r[1][1]),
+        .Pass(Pass));
 
     CORDIC_PE ROW1_COL2(
         .clk(clk),
         .rst_n(rst_n),
         .InMode(Mode_r[1][1]),
+        .Pass(Pass),
         .InX(X_h[1][1]),
         .InY(Y_v[0][2]),
         .OutX(X_h[1][2]),
@@ -157,19 +162,23 @@ module Delay2_Unit(
     input InMode,
     input signed [`DATA_WIDTH-1:0] In,
     output logic signed [`DATA_WIDTH-1:0] Out,
-    output logic OutMode
+    output logic OutMode,
+    output logic Pass
     );
     
     logic signed [`DATA_WIDTH-1:0] In_r;
     logic InMode_r [0:1];
+    logic Pass_r;
 
     always_ff @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin 
             Out <= 0;
             OutMode <= 0;
+            Pass <= 0;
             In_r <= 0;
             InMode_r[0] <= 0;
             InMode_r[1] <= 0;
+            Pass_r <= 0;
         end
         else begin 
             In_r <= In;
@@ -177,6 +186,8 @@ module Delay2_Unit(
             InMode_r[1] <= InMode_r[0];
             Out <= In_r;
             OutMode <= InMode_r[1];
+            Pass_r <= (InMode==1);
+            Pass <= Pass_r;
         end
     end
 
