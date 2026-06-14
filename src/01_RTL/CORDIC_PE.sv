@@ -157,8 +157,11 @@ module CORDIC_PE (
 
     always_comb begin : OUTPUT_BLOCK
         if(Pass_r[`PIPE_STAGE-1]) begin
+            X_Mul = 0;
+            Y_Mul = 0;
             OutX = X[`PIPE_STAGE-1];
             OutY = Y[`PIPE_STAGE-1];
+            OutMode = 0;
         end
         else begin
             X_Mul = X[`PIPE_STAGE-1] * `K_INV;

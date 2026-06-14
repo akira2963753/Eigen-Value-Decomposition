@@ -1,4 +1,4 @@
-set toplevel CORDIC_PE 
+set toplevel EVD 
 # set filelist {../RTL/}
 set sh_continue_on_error false
 set compile_preserve_subdesign_interfaces true
@@ -15,20 +15,21 @@ link
 check_design
 
 # Set the clock period
-set period 10
-set io_delay [expr {$period * 0.5}]
+set period 8
+set io_delay [expr {$period * 0.2}]
 # set io_delay 
 
 set_operating_conditions -min fast  -max slow
 set_wire_load_model -name tsmc090_wl10 -library slow
 
 create_clock -name clk -period $period  [get_ports clk] 
-# set_ideal_network         [get_ports clk]
+set_ideal_network         [get_ports clk]
 # set_ideal_network         [get_ports rst_n]
 set_dont_touch_network                  [get_clocks clk]
-# set_fix_hold                            [get_clocks clk]
+set_fix_hold                            [get_clocks clk]
 
-set_clock_uncertainty       0.5    [get_clocks clk]
+set_clock_uncertainty -setup 0.5 [get_clocks clk]
+set_clock_uncertainty -hold  0.0 [get_clocks clk]
 set_clock_latency -source   0      [get_clocks clk]
 set_clock_latency           0.1    [get_clocks clk] 
 set_clock_transition        0.1    [all_clocks]
@@ -52,7 +53,8 @@ set_max_transition  0.2  [all_inputs]
 #set effort high
 #compile -exact_map -boundary_optimization -map_effort $effort -area_effort $effort -power_effort $effort
 
-compile_ultra -no_autoungroup 
+compile_ultra -no_autoungroup
+compile_ultra -inc
 
 set bus_inference_style {%s[%d]}
 set bus_naming_style    {%s[%d]}
@@ -86,9 +88,9 @@ redirect ./Report/area.txt       { report_area }
 redirect ./Report/area_hier.txt  { report_area -hierarchy }
 redirect ./Report/timing.txt     { report_timing }
 
-remove_design -all
+# remove_design -all
 
-file delete -force default.svf
-file delete -force filenames.log
-file delete -force command.log
+# file delete -force default.svf
+# file delete -force filenames.log
+# file delete -force command.log
 

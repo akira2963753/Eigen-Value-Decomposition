@@ -39,15 +39,35 @@ module TESTBED();
     // ------------------ DUT Instantiation ----------------------
     //=============================================================
     CORDIC_PE u_dut (
-        .clk(clk),
-        .rst_n(rst_n),
-        .InMode(in_mode),
-        .InX(in_x),
-        .InY(in_y),
-        .OutX(out_x),
-        .OutY(out_y),
+        .clk    (clk),
+        .rst_n  (rst_n),
+        .InMode (in_mode),
+        .Pass   (1'b0),
+        .InX    (in_x),
+        .InY    (in_y),
+        .OutX   (out_x),
+        .OutY   (out_y),
         .OutMode(out_mode)
     );
+
+    //=============================================================
+    // ---------------- Sim Mode & SDF Annotate -------------------
+    //=============================================================
+    `ifdef GATE_SIM
+        initial begin
+            $display("===============================================");
+            $display("          GATE-LEVEL SIMULATION START          ");
+            $display("===============================================");
+        end
+
+        initial $sdf_annotate("../02_SYN/Netlist/CORDIC_PE.sdf", u_dut);
+    `else
+        initial begin
+            $display("===============================================");
+            $display("         BEHAVIORAL SIMULATION START           ");
+            $display("===============================================");
+        end
+    `endif
 
     //=============================================================
     // ------------- FSDB Waveform Dump (VCS / Verdi) ------------
