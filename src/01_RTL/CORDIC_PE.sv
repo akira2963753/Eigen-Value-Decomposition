@@ -21,7 +21,7 @@ module CORDIC_PE (
     input signed [`DATA_WIDTH-1:0] InY,
     output logic signed [`DATA_WIDTH-1:0] OutX,
     output logic signed [`DATA_WIDTH-1:0] OutY,
-    output logic signed OutMode
+    output logic OutMode
     );
 
     localparam J = `ITERATION / `PIPE_STAGE;

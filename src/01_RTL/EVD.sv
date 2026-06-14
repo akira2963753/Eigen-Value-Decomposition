@@ -166,7 +166,7 @@ module EVD(
     end
 
     always_ff @(posedge clk or negedge rst_n) begin : OUTPUT_BUFFER
-        if(!rst_n) for(int m = 0; m < 4; m++) begin 
+        if(!rst_n) for(int m = 0; m < 5; m++) begin 
             TEMP[m] <= 0;
         end
         else begin 
