@@ -29,13 +29,14 @@ module TESTBED();
     logic signed [`DATA_WIDTH-1:0] out_data [0:`MATRIX_SIZE-1];
     logic out_valid;
 
-    `ifdef GATE_SIM
+    // Gate-Sim 的時候需要把 Data Flatten，注意要從 MSB 往 LSB 放
+    `ifdef GATE_SIM 
         logic [`MATRIX_SIZE*`DATA_WIDTH-1:0] in_data_flat, out_data_flat;
 
         always_comb begin
             for (int i = 0; i < `MATRIX_SIZE; i++) begin
-                in_data_flat[i*`DATA_WIDTH +: `DATA_WIDTH] = in_data[i];
-                out_data[i] = out_data_flat[i*`DATA_WIDTH +: `DATA_WIDTH];
+                in_data_flat[(`MATRIX_SIZE-1-i)*`DATA_WIDTH +: `DATA_WIDTH] = in_data[i];
+                out_data[i] = out_data_flat[(`MATRIX_SIZE-1-i)*`DATA_WIDTH +: `DATA_WIDTH];
             end
         end
     `endif
@@ -46,6 +47,8 @@ module TESTBED();
     logic [`DATA_WIDTH-1:0] mem_in [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] mem_gold_ev [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] mem_gold_u [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] mem_out_ev [0:`MATRIX_SIZE-1];
+    logic signed [`DATA_WIDTH-1:0] mem_out_u [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
 
     initial begin
         $readmemh({`DAT_PATH, "EVD_InData.dat"}, mem_in);
@@ -149,6 +152,7 @@ module TESTBED();
 
         for (int i = 0; i < `MATRIX_SIZE; i++) begin
             act = out_data[i];
+            mem_out_ev[i] = act;
             exp = mem_gold_ev[i];
             if (act !== exp) begin
                 fail_cnt++;
@@ -168,6 +172,7 @@ module TESTBED();
 
         for (int row = 0; row < `MATRIX_SIZE; row++) begin
             act = out_data[row];
+            mem_out_u[row][col] = act;
             exp = mem_gold_u[row][col];
             if (act !== exp) begin
                 fail_cnt++;
@@ -182,6 +187,12 @@ module TESTBED();
         end
     endtask
 
+    task automatic export_results();
+        $writememh({`DAT_PATH, "OutputEV.dat"}, mem_out_ev);
+        $writememh({`DAT_PATH, "OutputU.dat"}, mem_out_u);
+        $display("[TB] Exported OutputEV.dat & OutputU.dar");
+    endtask
+
     task automatic golden_check();
         wait(out_valid);
         for (int c = 0; c < 4; c++) begin
@@ -189,6 +200,7 @@ module TESTBED();
             if (c == 0) check_ev();
             else check_u(c - 1);
         end
+        export_results();
     endtask
 
     //=============================================================
