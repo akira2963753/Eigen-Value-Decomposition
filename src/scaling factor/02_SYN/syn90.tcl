@@ -1,123 +1,99 @@
-set source_filelist "file.f"
-set top_designs [list csd_scale direct_mult_scale]
-
-set max_path_delay 8.0
-set input_transition 0.2
-set max_capacitance 0.1
-set max_fanout 10
-set max_transition 0.2
-
+set toplevel CSD 
+# set filelist {../RTL/}
 set sh_continue_on_error false
 set compile_preserve_subdesign_interfaces true
-
-file mkdir work
-file mkdir Netlist
-file mkdir Report
-
 define_design_lib work -path work
 
-analyze -format verilog -vcs "-f ${source_filelist}"
+source -echo -verbose ./.synopsys_dc.setup
+echo "TARGET_LIBRARY = $target_library"
 
-define_name_rules name_rule \
-	-allowed "A-Za-z0-9_" \
-	-max_length 255 \
-	-type cell
-define_name_rules name_rule \
-	-allowed "A-Za-z0-9_[]" \
-	-max_length 255 \
-	-type net
+analyze -f sverilog -vcs "-f file.f"
+# analyze -f verilog $filelist
+elaborate $toplevel
+
+set filename [format "%s%s" $toplevel "_raw.ddc"]
+write -format ddc -hierarchy -output $filename
+
+link
+check_design
+
+# Set the clock period
+set period 8
+set io_delay [expr {$period * 0.2}]
+# set io_delay 
+
+set_operating_conditions -min fast  -max slow
+set_wire_load_model -name tsmc090_wl10 -library slow
+
+create_clock -name clk -period $period   [get_ports clk] 
+set_ideal_network         [get_ports clk]
+# set_ideal_network         [get_ports rst_n]
+set_dont_touch_network                  [get_clocks clk]
+set_fix_hold                            [get_clocks clk]
+
+set_clock_uncertainty -setup 0.5 [get_clocks clk]
+set_clock_uncertainty -hold  0.0 [get_clocks clk]
+set_clock_latency -source   0      [get_clocks clk]
+set_clock_latency           0.1    [get_clocks clk] 
+set_clock_transition        0.1    [all_clocks]
+
+set_input_transition    0.2 [all_inputs]
+
+set_input_delay -clock clk -max ${io_delay} [remove_from_collection [all_inputs] [get_ports clk]]
+set_input_delay -clock clk -min 0 [remove_from_collection [all_inputs] [get_ports clk]]
+set_output_delay -clock clk -max ${io_delay} [all_outputs]
+set_output_delay -clock clk -min 0 [all_outputs]
+
+set_driving_cell -library tpzn90gv3wc -lib_cell PDIDGZ_33 -pin {C} [all_inputs]
+set_load [load_of "tpzn90gv3wc/PDO16CDG_33/I"] [all_outputs]
+
+set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
+set_max_area        0
+set_max_capacitance 0.1 [remove_from_collection [all_inputs] [get_ports clk]]
+set_max_fanout      10    [remove_from_collection [all_inputs] [get_ports clk]]
+set_max_transition  0.2  [all_inputs]
+
+#set effort high
+#compile -exact_map -boundary_optimization -map_effort $effort -area_effort $effort -power_effort $effort
+
+compile_ultra -no_autoungroup
+compile_ultra -inc
+
+set bus_inference_style {%s[%d]}
+set bus_naming_style    {%s[%d]}
+set hdlout_internal_busses true
+
+change_names -hierarchy -rule verilog
+define_name_rules name_rule -allowed "A-Za-z0-9_" -max_length 255 -type cell
+define_name_rules name_rule -allowed "A-Za-z0-9_[]" -max_length 255 -type net
 define_name_rules name_rule -map {{"\\*cell\\*" "cell"}}
 define_name_rules name_rule -case_insensitive
+change_names -hierarchy -rules name_rule
 
-set area_compare_file "./Report/area_compare.txt"
-file delete -force ${area_compare_file}
+sh mkdir -p Netlist
+sh mkdir -p Report
 
-foreach toplevel ${top_designs} {
-	elaborate ${toplevel}
-	current_design ${toplevel}
+set filename [format "%s%s" $toplevel "_opt.ddc"]
+write -format ddc -hierarchy -output ./Netlist/$filename
 
-	link
-	check_design
+set filename [format "%s%s" $toplevel ".sdf"]
+write_sdf -version 2.1 -load_delay net ./Netlist/$filename
 
-	set_operating_conditions -min fast -max slow
-	set_wire_load_model -name tsmc090_wl10 -library slow
+set filename [format "%s%s" $toplevel "_syn.v"]
+write -format verilog -hierarchy -output ./Netlist/$filename
+sh sed -i {6i \`timescale 1ns/1ps} ./Netlist/${toplevel}_syn.v
 
-	set_input_transition ${input_transition} [all_inputs]
-	set_driving_cell \
-		-library tpzn90gv3wc \
-		-lib_cell PDIDGZ_33 \
-		-pin C \
-		[all_inputs]
-	set_load [load_of "tpzn90gv3wc/PDO16CDG_33/I"] [all_outputs]
+set filename [format "%s%s" $toplevel ".sdc"]
+write_sdc ./Netlist/$filename
 
-	set_max_delay ${max_path_delay} \
-		-from [all_inputs] \
-		-to [all_outputs]
-	set_max_area 0
-	set_max_capacitance ${max_capacitance} [current_design]
-	set_max_fanout ${max_fanout} [current_design]
-	set_max_transition ${max_transition} [current_design]
+redirect ./Report/power.txt      { report_power }
+redirect ./Report/area.txt       { report_area }
+redirect ./Report/area_hier.txt  { report_area -hierarchy }
+redirect ./Report/timing.txt     { report_timing }
 
-	set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
+# remove_design -all
 
-	compile_ultra -no_autoungroup
-	compile_ultra -incremental
+# file delete -force default.svf
+# file delete -force filenames.log
+# file delete -force command.log
 
-	set bus_inference_style {%s[%d]}
-	set bus_naming_style {%s[%d]}
-	set hdlout_internal_busses true
-
-	change_names -hierarchy -rule verilog
-	change_names -hierarchy -rules name_rule
-
-	set netlist_dir "./Netlist/${toplevel}"
-	set report_dir "./Report/${toplevel}"
-	file mkdir ${netlist_dir}
-	file mkdir ${report_dir}
-
-	write \
-		-format ddc \
-		-hierarchy \
-		-output "${netlist_dir}/${toplevel}_opt.ddc"
-	write_sdf \
-		-version 2.1 \
-		-load_delay net \
-		"${netlist_dir}/${toplevel}.sdf"
-	write \
-		-format verilog \
-		-hierarchy \
-		-output "${netlist_dir}/${toplevel}_syn.v"
-	write_sdc "${netlist_dir}/${toplevel}.sdc"
-
-	redirect "${report_dir}/area.txt" {
-		report_area
-	}
-	redirect "${report_dir}/timing.txt" {
-		report_timing
-	}
-	redirect "${report_dir}/power.txt" {
-		report_power
-	}
-	redirect "${report_dir}/resources.txt" {
-		report_resources
-	}
-	redirect "${report_dir}/references.txt" {
-		report_reference
-	}
-
-	set compare_handle [open ${area_compare_file} a]
-	puts ${compare_handle} \
-		"================================================================"
-	puts ${compare_handle} "Design: ${toplevel}"
-	puts ${compare_handle} \
-		"================================================================"
-	close ${compare_handle}
-
-	redirect -append ${area_compare_file} {
-		report_area
-	}
-
-	remove_design -all
-}
-
-exit
