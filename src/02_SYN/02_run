@@ -1,1 +1,1 @@
-dc_shell -f syn90.tcl | tee syn.log
+dc_shell -f syn16.tcl | tee syn.log
