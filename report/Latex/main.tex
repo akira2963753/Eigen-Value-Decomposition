@@ -1,0 +1,296 @@
+\documentclass[12pt,a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[lining]{ebgaramond}
+\usepackage[cmintegrals,cmbraces]{newtxmath}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{etoolbox}
+\usepackage{enumitem}
+\usepackage{makecell}
+\usepackage{siunitx}
+\graphicspath{{../Figure}}
+
+% Page layout
+\geometry{
+    left=1.8cm,
+    right=1.8cm,
+    top=2.2cm,
+    bottom=2.2cm
+}
+
+% Color definitions
+\definecolor{crimson}{RGB}{153, 0, 0}
+\definecolor{darkblue}{RGB}{0, 0, 153}
+
+% Hyperlink settings
+\hypersetup{
+    colorlinks=true,
+    linkcolor=crimson,
+    urlcolor=crimson,
+    citecolor=crimson
+}
+
+% Allow line breaks at slashes to prevent overfull hbox
+\tolerance=2000
+\emergencystretch=2em
+
+% Chapter/section title formatting
+\usepackage{titlesec}
+\titleformat{\chapter}{\normalfont\huge\bfseries}{}{0pt}{}[\vspace{0.3em}]
+\titlespacing*{\chapter}{0pt}{0pt}{14pt}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\setlength{\parindent}{0pt}
+
+% Float spacing: figures slightly looser, tables stay compact
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{0pt}
+\captionsetup[figure]{skip=5pt, belowskip=2pt}
+\captionsetup[table]{skip=2pt}
+\BeforeBeginEnvironment{figure}{\vspace{4pt}}
+\AfterEndEnvironment{figure}{\vspace{2pt}}
+\AfterEndEnvironment{table}{\vspace{-6pt}}
+
+\begin{document}
+
+\pagestyle{plain}
+
+% ─────────────────────────────────────────────
+%  Cover Page
+% ─────────────────────────────────────────────
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+
+{\fontsize{28}{34}\selectfont\bfseries DSP in VLSI\par}
+\vspace{0.6em}
+{\fontsize{20}{26}\selectfont\bfseries Final Project\par}
+\vspace{0.4em}
+{\fontsize{16}{22}\selectfont\bfseries Eigen-value Decomposition by Iterative QR Operations\par}
+
+\vspace{1.5cm}
+\textcolor{crimson}{\rule{0.6\linewidth}{1.2pt}}
+\vspace{1.5cm}
+
+{\large\bfseries Student ID}\par
+\vspace{0.4em}
+{\large M11407439 / B11107027}\par
+
+\vspace{0.8em}
+
+{\large\bfseries Name}\par
+\vspace{0.4em}
+{\large MING-HONG, LIN / Innis}\par
+
+\vspace{2cm}
+
+{\large\bfseries Development Environment}\par
+\vspace{0.8em}
+\begin{tabular}{rl}
+    \textbf{HDL}              & SystemVerilog \\[4pt]
+    \textbf{Simulation Tools} & Synopsys VCS and Verdi \\[4pt]
+    \textbf{Synthesis Tool}   & Synopsys DC Compiler \\[4pt]
+    \textbf{Process}          & TSMC 16nm (ADFP) \\[4pt]
+    \textbf{Verification}     & Python \\
+\end{tabular}
+
+\vfill
+
+\textcolor{crimson}{\rule{0.6\linewidth}{0.6pt}}\par
+\vspace{0.5em}
+{\small Due Date: 2026/06/17 05:00 PM}
+
+\end{titlepage}
+
+% ─────────────────────────────────────────────
+%  Table of Contents
+% ─────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Section 1: Wordlength and RMSE Analysis}
+% ─────────────────────────────────────────────
+\section{Minimum Fractional Wordlength \& CORDIC Stage Selection}
+
+To set the fixed-point parameters of the EVD bit-true model, we sweep the fractional wordlength and the number of CORDIC micro-rotation stages against all 11 matrices in \texttt{Final11Pattern.mat}.
+A configuration is accepted only when the RMSE of eigenvalues and eigenvectors both remain below $10^{-2}$ for every test pattern:
+\[
+\mathrm{RMSE}_\lambda = \sqrt{\frac{1}{3}\sum_{i=1}^{3}\bigl(\hat{\lambda}_i - \lambda_i\bigr)^2}\quad
+\mathrm{RMSE}_v = \sqrt{\frac{1}{9}\sum_{i=1}^{3}\bigl\|\hat{\mathbf{v}}_i - \mathbf{v}_i\bigr\|_2^2}
+\]
+where $\lambda_i$ and $\hat{\lambda}_i$ are the reference and bit-true eigenvalues, and $\mathbf{v}_i$ and $\hat{\mathbf{v}}_i$ are the associated eigenvectors.
+
+We use a two-step search rather than tuning both knobs at once.
+First, with the CORDIC stage count fixed at 8, we increase the fractional wordlength $b$ until the RMSE criterion is met on all 11 sets; the smallest such value is $b = 11$.
+Second, with $b = 11$ held fixed, we sweep the CORDIC stage count and find that 8 stages is again the minimum setting that satisfies the same criterion.
+Thus, the selected bit-true configuration is \textbf{11 fractional bits} and \textbf{8 CORDIC stages}, which are adopted consistently in the subsequent verification and hardware implementation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure1.png}
+    \caption{RMSE vs.\ fractional bits ($N_{\mathrm{stage}}=8$, left) and CORDIC stages ($b=11$, right).}
+    \label{fig:rmse-1d}
+\end{figure}
+
+The two-step sweeps above are useful for intuition, but they do not jointly identify the smallest $(b, N_{\mathrm{stage}})$ pair.
+Each pass fixes one parameter at the value found earlier, so a configuration that fails in isolation may still satisfy the RMSE criterion when both knobs are set together, and the true minimum combination may be missed.
+
+\newpage
+
+We therefore perform a two-dimensional sweep over fractional bits $b$ and CORDIC stages $N_{\mathrm{stage}}$.
+Every grid point is evaluated on all 11 test patterns; a setting passes only when both $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_v$ remain below $10^{-2}$ for every set.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure2.png}
+    \caption{2D pass maps over $b$ and $N_{\mathrm{stage}}$ (11 test patterns).}
+    \label{fig:rmse-2d}
+\end{figure}
+
+Table~\ref{tab:hw-config} summarizes the hardware configuration selected from the sweeps above.
+
+\begin{table}[H]
+\centering
+\caption{Hardware Configuration}
+\label{tab:hw-config}
+\vspace{0.15em}
+\setlength{\tabcolsep}{12pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lc}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+\texttt{B} (fractional bits)       & 11 \\
+\texttt{N\_STAGES} (CORDIC stages) & 8 \\
+\texttt{MAX\_ITER} (max iterations)  & 7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Integer Bit-Width Analysis}
+
+With the configuration in Table~\ref{tab:hw-config}, we record the dynamic range of each EVD stage across all 11 patterns and derive the minimum integer wordlength needed at each node.
+Table~\ref{tab:int-bits} lists the worst-case integer bit requirement and the corresponding fixed-point format ($1$ sign bit + integer + $B$ fractional bits).
+
+\begin{table}[H]
+\centering
+\caption{Integer Bit-Width Analysis}
+\label{tab:int-bits}
+\vspace{0.15em}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lrrrrlc}
+\toprule
+\textbf{Node} & \textbf{Min} & \textbf{Max} & \textbf{Max abs} & \textbf{Int.\ bits} & \textbf{Q format} & \textbf{Total} \\
+\midrule
+Quantized input   & $-2.394$ & $10.239$ & $10.239$ & 4 & Q4.11 & 16 \\
+Matrix T/R        & $-5.117$ & $10.585$ & $10.585$ & 4 & Q4.11 & 16 \\
+Eigenvector U     & $-0.981$ & $1.000$  & $1.000$  & 1 & Q1.11 & 13 \\
+CORDIC input      & $-5.117$ & $10.585$ & $10.585$ & 4 & Q4.11 & 16 \\
+CORDIC internal   & $-10.586$ & $17.432$ & $17.432$ & 5 & Q5.11 & 17 \\
+Scaled output     & $-5.117$ & $10.585$ & $10.585$ & 4 & Q4.11 & 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\section{Fixed-Point Bit-True Model}
+
+With the fractional wordlength, CORDIC stage count, iteration limit, and integer bit-width requirements established above, we implement a fixed-point bit-true model of the iterative QR EVD datapath.
+The model applies the formats in Tables~\ref{tab:hw-config} and~\ref{tab:int-bits} at each quantization point so that its arithmetic matches the behavior targeted by the RTL design.
+
+This model supports more accurate fixed-point error analysis than a floating-point reference, because quantization, CORDIC rounding, and iterative accumulation are modeled explicitly.
+It also supplies golden eigenvalues and eigenvectors for RTL verification, so behavior and gate-level simulations can be compared against a consistent fixed-point reference instead of double-precision software alone.
+
+\section{CORDIC Scaling Factor}
+
+Section~1.1 applies gain compensation by dividing the rotated pair by floating-point $K$; only the quotient is re-quantized to $B$ fractional bits.
+The constant $1/K$ itself is not quantized.
+
+With ideal $K$, Table~\ref{tab:int-bits} shows that the main datapath fits in a \textbf{17-bit} word (worst case Q5.11).
+No wider format is needed for matrix registers, CORDIC rotations, or iterative updates.
+
+Hardware must approximate $1/K$ with a quantized constant.
+Raising $B$ globally would widen the entire datapath even though the dynamic range analysis does not require it.
+
+We therefore keep $B = 11$ on the datapath and introduce a separate fractional wordlength $B_K$ for $1/K$ only.
+Each PE performs $X \times (1/K)$ with locally widened precision and truncates the product back to the datapath width before the result is passed on.
+Extra bits are spent at this single multiply-and-round point, not across the systolic array.
+
+Holding $B = 11$ and $N_{\mathrm{stage}} = 8$ fixed, we sweep $B_K$ independently.
+All 11 patterns meet the RMSE criterion ($< 10^{-2}$) when $B_K \geq 16$ (Table~\ref{tab:k-config}).
+
+\begin{table}[H]
+\centering
+\caption{CORDIC Scaling Factor Configuration}
+\label{tab:k-config}
+\vspace{0.15em}
+\setlength{\tabcolsep}{12pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lc}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+\texttt{B} (datapath fractional bits) & 11 \\
+\texttt{B\_K} (fractional bits for $1/K$) & 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 2: Bit-True Model Verification (11 Test Patterns)}
+% ─────────────────────────────────────────────
+
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 3: Hardware Architecture and Control}
+% ─────────────────────────────────────────────
+
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 4: Hardware Simulation}
+% ─────────────────────────────────────────────
+
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 5: Fixed-Point vs.\ Hardware Consistency}
+% ─────────────────────────────────────────────
+
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 6: Area-Time Product}
+% ─────────────────────────────────────────────
+
+\newpage
+
+% ─────────────────────────────────────────────
+\chapter{Requirement 7: Design Innovations and Team Contributions}
+% ─────────────────────────────────────────────
+
+\end{document}
