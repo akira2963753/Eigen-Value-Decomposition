@@ -1,6 +1,6 @@
-PWD C:\Users\harry\Desktop\Project\DSP-IN-VLSI-Final\report\Latex
+PWD c:\Users\harry\Desktop\Project\DSP-IN-VLSI-Final\report\Latex
 INPUT C:\Users\harry\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT main.tex
+INPUT c:\Users\harry\Desktop\Project\DSP-IN-VLSI-Final\report\Latex\main.tex
 OUTPUT main.log
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\base\report.cls
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\base\report.cls
@@ -363,6 +363,14 @@ INPUT ..\Figure\figure2.png
 INPUT ..\Figure\figure2.png
 INPUT ..\Figure\figure2.png
 INPUT ..\Figure\figure2.png
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\tfm\public\ebgaramond\EBGaramond-Regular-lf-t1.tfm
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\tfm\public\ebgaramond\EBGaramond-Regular-lf-t1.tfm
+INPUT ..\Figure\figure3.png
+INPUT ..\Figure\figure3.png
+INPUT ..\Figure\figure3.png
+INPUT ..\Figure\figure3.png
+INPUT ..\Figure\figure3.png
+INPUT ..\Figure\figure3.png
 INPUT main.aux
 INPUT .\main.out
 INPUT .\main.out

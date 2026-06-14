@@ -1,7 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1781427850.33089 "main.tex" "main.pdf" "main" 1781427853.24279 0
+["pdflatex"] 1781430240.89041 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781430244.11237 0
   "../Figure/figure1.png" 1781426156 140038 be0f6e080588d65938dafd563c630e11 ""
   "../Figure/figure2.png" 1781425247 58698 f4cb73b3f6458389d52d94e94770d501 ""
+  "../Figure/figure3.png" 1781430064 57355 195294827cd7064b90b7322e25d0472c ""
   "C:/Users/harry/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1779209036 225234 271ae498c86da04e5c6731949107c10c ""
   "C:/Users/harry/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1200.pk" 1777878135 24152 ddfbcf4ab6a98c1da945a1cc965f2814 ""
   "C:/Users/harry/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1777556409 13350272 0df59464e53e3101262c84f52d812bbe ""
@@ -153,10 +154,11 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "main.aux" 1781427852 3652 ccba76f87b4c23f30ee81933877254fa "pdflatex"
-  "main.out" 1781427852 2906 747cbca3a8f3ab0b068595478234b2fb "pdflatex"
-  "main.tex" 1781427846 12767 6c9a3caf3d19d08aa95fe2af666e5f24 ""
-  "main.toc" 1781427852 1083 0ab3a92a9fc6ed97f6132ef6733f63fc "pdflatex"
+  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781430239 12627 f9e4aee290b72dadecc3f8ca87ed5c44 ""
+  "main.aux" 1781430243 3824 67f76a7d8ebdbb416c8f8f88a23fb62d "pdflatex"
+  "main.out" 1781430243 2676 09fc8b3f0b6e3f8d3318fe7ed7535af9 "pdflatex"
+  "main.tex" 1781430239 12627 f9e4aee290b72dadecc3f8ca87ed5c44 ""
+  "main.toc" 1781430243 1040 229709e86cb954ce1bbf7a143f4c88f8 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
