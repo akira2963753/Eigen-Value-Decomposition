@@ -24,8 +24,44 @@
 \usepackage{enumitem}
 \usepackage{makecell}
 \usepackage{siunitx}
+\usepackage{xfp}
 \usepackage{pifont}
 \graphicspath{{../Figure}}
+
+% Area-Time Product settings and calculations
+\newcommand{\LatencyCycles}{112}
+\newcommand{\BestTestNumber}{14}
+\newcommand{\BestClockPeriod}{0.9225}
+\newcommand{\BestArea}{5078}
+
+\newcommand{\ExecutionTimeValue}[1]{%
+    \fpeval{#1 * \LatencyCycles}%
+}
+
+\newcommand{\ATPValue}[2]{%
+    \fpeval{#1 * #2 * \LatencyCycles}%
+}
+
+\newcommand{\ATPRow}[3]{%
+    #1 & #2 &
+    \num[group-separator={,},group-minimum-digits=4]{#3} &
+    \LatencyCycles &
+    \num[round-mode=places,round-precision=3,round-pad=false]
+        {\ExecutionTimeValue{#2}} &
+    \num[group-separator={,},round-mode=places,round-precision=1]
+        {\ATPValue{#2}{#3}} \\
+}
+
+\newcommand{\ATPBestRow}{%
+    \BestTestNumber & \BestClockPeriod &
+    \num[group-separator={,},group-minimum-digits=4]{\BestArea} &
+    \LatencyCycles &
+    \num[round-mode=places,round-precision=3,round-pad=false]
+        {\ExecutionTimeValue{\BestClockPeriod}} &
+    \textbf{\num[mode=text,detect-weight=true,group-separator={,},
+        round-mode=places,round-precision=1]
+        {\ATPValue{\BestClockPeriod}{\BestArea}}} \\
+}
 
 % Page layout
 \geometry{
@@ -419,6 +455,63 @@ Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
 
 % ─────────────────────────────────────────────
 \chapter{Section 6: Area-Time Product}
+
+The Area-Time Product (ATP) is used to evaluate the trade-off between hardware
+area and execution time. For each synthesis result, ATP is calculated as
+\begin{equation}
+    \mathrm{ATP}
+    = \mathrm{Area} \times \mathrm{Latency} \times T_{\mathrm{clk}},
+\end{equation}
+where the latency is \LatencyCycles{} clock cycles and $T_{\mathrm{clk}}$ is
+the clock period in nanoseconds. A lower ATP indicates a better balance
+between area and timing performance.
+
+\begin{table}[H]
+\centering
+\caption{Area-Time Product for Different Synthesis Constraints}
+\label{tab:area-time-product}
+\vspace{0.15em}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{c *{5}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Test} &
+\makecell{\textbf{Clock Period}\\\textbf{(ns)}} &
+\textbf{Area} &
+\makecell{\textbf{Latency}\\\textbf{(cycles)}} &
+\makecell{\textbf{Execution Time}\\\textbf{(ns)}} &
+\textbf{ATP} \\
+\midrule
+\ATPRow{1}{1.00}{4918}
+\ATPRow{2}{0.50}{10092}
+\ATPRow{3}{0.90}{5641}
+\ATPRow{4}{1.10}{4862}
+\ATPRow{5}{1.05}{4925}
+\ATPRow{6}{1.20}{4733}
+\ATPRow{7}{1.30}{4654}
+\ATPRow{8}{0.95}{5048}
+\ATPRow{9}{0.975}{4992}
+\ATPRow{10}{0.94}{5063}
+\ATPRow{11}{0.925}{5084}
+\ATPRow{12}{0.920}{5116}
+\ATPRow{13}{0.915}{5268}
+\ATPBestRow
+\ATPRow{15}{0.9275}{5109}
+\ATPRow{16}{0.92125}{5101}
+\ATPRow{17}{0.92375}{5119}
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+Among the evaluated synthesis constraints, the minimum ATP is
+\textbf{\num[mode=text,detect-weight=true,group-separator={,},
+round-mode=places,round-precision=1]
+{\ATPValue{\BestClockPeriod}{\BestArea}}}, obtained with a clock period of
+\SI{\BestClockPeriod}{ns}, an area of
+\num[group-separator={,},group-minimum-digits=4]{\BestArea}, and a latency of
+\LatencyCycles{} clock cycles. Therefore, this configuration currently
+provides the best area--timing trade-off.
 % ─────────────────────────────────────────────
 
 \newpage

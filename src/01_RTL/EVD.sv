@@ -202,11 +202,11 @@ module EVD(
         if(state==OUT) begin
             OutValid = 1;
             case(io_cnt)
-                4'd0: begin 
+                4'd0: begin
                     OutData[0] = TEMP[0];
                     OutData[1] = TEMP[3];
                     OutData[2] = TEMP[4];
-                end 
+                end
                 4'd1: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[0][m];
                 4'd2: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[1][m];
                 4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[2][m];
