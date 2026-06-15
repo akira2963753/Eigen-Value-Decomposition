@@ -251,6 +251,8 @@ Therefore, Extra bits are spent only at this multiply-and-round point, not acros
 \end{tabular}
 \end{table}
 
+\section{CSD vs Constant Multiplier}
+
 % ─────────────────────────────────────────────
 \chapter{Section 2: Bit-True Model Verification}
 % ─────────────────────────────────────────────
@@ -288,6 +290,10 @@ Figure~\ref{fig:cordic-pe} shows the resulting PE architecture.
     \caption{CORDIC PE Architecture.}
     \label{fig:cordic-pe}
 \end{figure}
+
+Figure~\ref{fig:cordic-pe} shows that the second iteration stage feeds directly into the output scaling stage.
+For better PPA, the two pipeline stages need not perform the same number of micro-rotations.
+The first iteration stage can execute five micro-rotations and the second stage three, while still completing all eight stages before gain compensation.
 
 \newpage
 
@@ -348,8 +354,32 @@ Figure~\ref{fig:evd-timing} tabulates this schedule for the \texttt{IDLE} load p
 
 \newpage
 
+One complete EVD run finishes in \textbf{114 clock cycles} from input load to the last output word.
+Table~\ref{tab:evd-latency} breaks this down by FSM phase.
+
+\begin{table}[H]
+\centering
+\caption{EVD Latency}
+\label{tab:evd-latency}
+\vspace{0.15em}
+\setlength{\tabcolsep}{12pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lc}
+\toprule
+\textbf{Phase} & \textbf{Cycles} \\
+\midrule
+\texttt{IDLE} (input load)                    & 3 \\
+\texttt{PROCESS} ($7$ iterations $\times$ $15$ cycles) & 105 \\
+\texttt{OUT} (eigenvalues and eigenvectors)   & 6 \\
+\midrule
+\textbf{Total}                                & \textbf{114} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Guided by the timing schedule in Figure~\ref{fig:evd-timing}, the three-state FSM acts as the \texttt{EVD} controller.
 It steers \texttt{InData} through an input buffer (data pre-processor and skew-aligned \texttt{IDU}), the systolic-array-based QRD core, and an output buffer (\texttt{TEMP} staging and \texttt{EV\_REG}).
+
 During \texttt{PROCESS}, feedback from the output buffer closes the $U$ and $T$ update loop; in \texttt{OUT}, the controller streams eigenvalues and eigenvectors from \texttt{EV\_REG} and \texttt{U\_REG} to \texttt{OutData}.
 Figure~\ref{fig:evd-arch} shows the resulting top-level architecture.
 
@@ -379,7 +409,7 @@ Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figure5.png}
-    \caption{RTL vs.\ bit-true model error, pattern~8.}
+    \caption{RTL vs.\ bit-true model error (pattern 8).}
     \label{fig:hw-consistency}
 \end{figure}
 

@@ -3,6 +3,7 @@
 \contentsline {section}{\numberline {1.2}Integer Bit-Width Analysis}{3}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Fixed-Point Bit-True Model}{4}{section.1.3}%
 \contentsline {section}{\numberline {1.4}CORDIC Scaling Factor}{4}{section.1.4}%
+\contentsline {section}{\numberline {1.5}CSD vs Constant Multiplier}{4}{section.1.5}%
 \contentsline {chapter}{\numberline {2}Section 2: Bit-True Model Verification}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}RMSE Per Pattern}{5}{section.2.1}%
 \contentsline {chapter}{\numberline {3}Section 3: Hardware Architecture and Control}{6}{chapter.3}%
