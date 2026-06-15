@@ -23,13 +23,9 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 | `QRD` | [src/01_RTL/QRD.sv](src/01_RTL/QRD.sv) | QR decomposition systolic array (3 CORDIC PEs + delay units). |
 | `CORDIC_PE` | [src/01_RTL/CORDIC_PE.sv](src/01_RTL/CORDIC_PE.sv) | CORDIC processing element (Vectoring / Rotation modes, 8 stages). |
 
-**Top-level (EVD)**
-
-![EVD architecture](report/Figure/EVD.png)
-
-**Systolic-array QRD**
-
-![QRD systolic array](report/Figure/QRD-Systolic-Array.png)
+| Top-level (EVD) | Systolic-array QRD |
+|:---:|:---:|
+| ![EVD architecture](report/Figure/EVD.png) | ![QRD systolic array](report/Figure/QRD-Systolic-Array.png) |
 
 **CORDIC PE**
 
