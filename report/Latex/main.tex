@@ -440,6 +440,29 @@ Figure~\ref{fig:evd-arch} shows the top-level architecture.
 
 \newpage
 
+\section{Detailed Transpose Buffer (Output Buffer)}
+
+The Output Buffer is the transpose buffer that feeds $\mathbf{R}^{\mathsf{T}}$ back
+into the array to form $\mathbf{R}\mathbf{Q}$. It is simply the direct hardware
+realization of the timing schedule of Fig.~\ref{fig:evd-timing}: the whole iterative
+operation is sequenced by a single FSM counter \texttt{cnt}, which on each cycle
+selects both the register written from the array output and the registers read back
+into the array. No separate addressing logic is needed; \texttt{cnt} alone drives the
+write and the transposed read-back.
+
+Figure~\ref{fig:transpose-buffer} shows the buffer at cnt~$=5$, $6$, and $7$; the
+circled \texttt{cnt} value marks when each register was written, and the five
+registers are read in transposed order to form the three input rows of
+$\mathbf{R}^{\mathsf{T}}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{OutputBuffer.png}
+    \caption{Transpose buffer (Output Buffer) Block Diagram.}
+    \label{fig:transpose-buffer}
+\end{figure}
+
+
 % ─────────────────────────────────────────────
 \chapter{Section 4: Hardware Simulation}
 % ─────────────────────────────────────────────
@@ -570,7 +593,7 @@ transpose/output buffer needs only \textbf{five} registers. The same schedule al
 whose value is already aligned by the adjacent two-cycle PE latency; it is replaced by
 a direct wire (Fig.~\ref{fig:qrd-systolic}).
 
-\section{Localized Scaling-Factor Precision}
+\section{Decoupled Scaling-Factor Precision}
 
 As detailed in Section~1.4, CORDIC gain compensation is the only point that demands
 extra fractional precision. Rather than widening the global fractional width $B$ and

@@ -1,7 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1781540363.84849 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781540368.45237 0
+["pdflatex"] 1781542810.67138 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781542815.68633 0
   "../Figure/CORDIC_PE.png" 1781507140 354423 4bc5e92cc1a616693c45bc62880e50fe ""
   "../Figure/EVD.png" 1781536363 163518 da0aca955a5385b09f109f07937040ca ""
+  "../Figure/OutputBuffer.png" 1781542494 165873 121c6cceee054a4d68361fd1cd2e8616 ""
   "../Figure/QRD-Systolic-Array.png" 1781423078 196760 695a197f88cf2ed41e8c8792616a9ff1 ""
   "../Figure/figure1.png" 1781426156 140038 be0f6e080588d65938dafd563c630e11 ""
   "../Figure/figure2.png" 1781425247 58698 f4cb73b3f6458389d52d94e94770d501 ""
@@ -177,11 +178,11 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781540362 26251 2a39b3e4db11740c4cf3fb5bfdf9f659 ""
-  "main.aux" 1781540368 7488 32f527879cab0ce15df50f2713830e7a "pdflatex"
-  "main.out" 1781540368 4666 adbf2eecd5045b638146652728fd3d65 "pdflatex"
-  "main.tex" 1781540362 26251 2a39b3e4db11740c4cf3fb5bfdf9f659 ""
-  "main.toc" 1781540368 1921 21622ab5c4c56af64c2beb68f4339bb0 "pdflatex"
+  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781542809 27300 97716a71562af157f53a43b3f894e725 ""
+  "main.aux" 1781542815 7913 69d9180c1435761cc73f66b3f1432c51 "pdflatex"
+  "main.out" 1781542815 4944 735ac13e2143ec9201544117cc94cd3f "pdflatex"
+  "main.tex" 1781542809 27300 97716a71562af157f53a43b3f894e725 ""
+  "main.toc" 1781542815 2023 09e7f44b9a82dbd95c7015f59b2f2cc9 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
