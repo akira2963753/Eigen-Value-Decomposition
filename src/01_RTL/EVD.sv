@@ -55,23 +55,21 @@ module EVD(
         endcase
     end
 
-    always_ff @(posedge clk or negedge rst_n) begin : IO_COUNTER
-        if(!rst_n) io_cnt <= 0;
-        else if(state==IDLE&&InValid) io_cnt <= io_cnt + 1;
+    always_ff @(posedge clk) begin : IO_COUNTER
+        if(state==IDLE&&InValid) io_cnt <= io_cnt + 1;
         else if(state==OUT) io_cnt <= io_cnt + 1;
         else io_cnt <= 0;
     end
 
-    always_ff @(posedge clk or negedge rst_n) begin : COUNTER
-        if(!rst_n) cnt <= 0;
-        else if(state==PROCESS) cnt <= (cnt==4'd14)? 0 : cnt + 1;
+    always_ff @(posedge clk) begin : COUNTER
+        if(state==PROCESS) cnt <= (cnt==4'd14)? 0 : cnt + 1;
         else if(state==OUT) cnt <= cnt + 1;
         else cnt <= 0;
     end
 
-    always_ff @(posedge clk or negedge rst_n) begin : ITERATION
-        if(!rst_n) iter_cnt <= 0;
-        else if(cnt==4'd14) iter_cnt <= iter_cnt + 1; 
+    always_ff @(posedge clk) begin : ITERATION
+        if(state==IDLE) iter_cnt <= 0;
+        else if(cnt==4'd14) iter_cnt <= iter_cnt + 1;
     end
 
     IDU u_IDU(
@@ -165,9 +163,9 @@ module EVD(
         end
     end
 
-    always_ff @(posedge clk or negedge rst_n) begin : OUTPUT_BUFFER
-        if(!rst_n) for(int m = 0; m < 5; m++) begin 
-            TEMP[m] <= 0;
+    always_ff @(posedge clk) begin : OUTPUT_BUFFER
+        if(state==IDLE) begin
+            for(int m = 0; m < 5; m++) TEMP[m] <= 0;
         end
         else begin 
             case(cnt) 
@@ -197,8 +195,8 @@ module EVD(
         .InData(IDUOut),
         .OutData(QRDOut));
 
-    always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+    always @(posedge clk) begin
+        if(state==IDLE) begin 
             for(int m = 0; m < `MATRIX_SIZE; m++) EV_REG[m] <= 0;
         end
         else if(state==PROCESS && iter_cnt == 4'd6) begin
