@@ -13,5 +13,5 @@
 \contentsline {chapter}{\numberline {4}Section 4: Hardware Simulation}{10}{chapter.4}%
 \contentsline {chapter}{\numberline {5}Section 5: Fixed-Point vs.\ Hardware Consistency}{11}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Section 6: Area-Time Product}{12}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Section 7: Design Innovations and Team Contributions}{13}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Team Contributions}{13}{section.7.1}%
+\contentsline {chapter}{\numberline {7}Section 7: Design Innovations}{13}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Section 8: Team Contributions}{14}{chapter.8}%

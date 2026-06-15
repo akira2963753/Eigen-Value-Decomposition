@@ -8,6 +8,7 @@
 \usepackage[lining]{ebgaramond}
 \usepackage[cmintegrals,cmbraces]{newtxmath}
 \usepackage{microtype}
+\usepackage{anyfontsize}
 \usepackage{geometry}
 \usepackage{tabularx}
 \usepackage{graphicx}
@@ -62,6 +63,9 @@
         round-mode=places,round-precision=1]
         {\ATPValue{\BestClockPeriod}{\BestArea}}} \\
 }
+
+% Body text: 13pt (report class default is 12pt)
+\AtBeginDocument{\fontsize{13}{15.6}\selectfont}
 
 % Page layout
 \geometry{
@@ -265,7 +269,7 @@ It also supplies golden eigenvalues and eigenvectors for RTL verification, so be
 
 Sections~\ref{fig:rmse-1d}--\ref{tab:int-bits} do not analyze the impact of quantizing the CORDIC scaling factor.
 They model gain compensation as $Q_B(X/K)$ only (divide by ideal $K$), then quantize the quotient.
-This is intentional, we do not want scaling-factor precision to enlarge global $B$ and widen the entire systolic datapath.
+This is intentional, we do not want scaling-factor precision to enlarge global fractional bits $B$ and widen the entire systolic datapath.
 Therefore, Extra bits are spent only at this multiply-and-round point, not across the systolic array.
 
 \begin{table}[H]
@@ -281,13 +285,18 @@ Therefore, Extra bits are spent only at this multiply-and-round point, not acros
 \midrule
 \texttt{DATA\_FRAC} (datapath fractional bits)     & 11 \\
 \texttt{DATA\_WIDTH} (datapath total bits) & 17 \\
-\texttt{\texttt{K\_INV\_FRAC}} (fractional bits for $1/K$) & 16 \\
-\texttt{\texttt{K\_INV\_DW}} (total bits for $1/K$) & 17 \\
+\texttt{K\_INV\_FRAC} (fractional bits for $1/K$) & 16 \\
+\texttt{K\_INV\_DW} (total bits for $1/K$) & 17 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \section{CSD vs Constant Multiplier}
+
+For CORDIC gain compensation ($X \times (1/K)$), we compared a hand-designed CSD multiplier with a constant multiplier left for Design Compiler to optimize.
+In our synthesis experiments, the CSD path introduces truncation error.
+A custom CSD design that meets the same accuracy requirement is larger than the constant multiplier optimized by Design Compiler.
+We therefore use the Design Compiler-optimized constant multiplier in the final RTL.
 
 % ─────────────────────────────────────────────
 \chapter{Section 2: Bit-True Model Verification}
@@ -313,7 +322,7 @@ Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_
 
 \section{CORDIC PE Architecture}
 
-We follow the Homework~4 CORDIC PE design: inputs are preconditioned in the initial stage, and the eight CORDIC micro-rotation stages are unfolded and pipelined to maximize throughput.
+We follow the \href{https://github.com/akira2963753/DSP-In-VLSI/tree/master/HW4-CORDIC/Final}{Homework~4} CORDIC PE design: inputs are preconditioned in the initial stage, and the eight CORDIC micro-rotation stages are unfolded and pipelined to maximize throughput.
 For this EVD application, \textbf{the exact rotation angle $\theta$ does not need to be stored.}
 Vectoring mode records each micro-rotation direction in a rotational direction register (RDR) and rotation mode replays those directions on the remaining matrix entries.
 
@@ -335,12 +344,12 @@ The first iteration stage can execute five micro-rotations and the second stage 
 
 \section{Systolic Array-Based QRD Architecture}
 
-Each \texttt{CORDIC\_PE} produces one result every two cycles, so the triangular QRD systolic array is retimed around this two-cycle latency.
-We remove the delay unit at the bottom-right diagonal position and route the vertical datapath directly into the output row, so horizontal and vertical streams stay aligned at the array outputs.
+Each CORDIC PE produces one result every two cycles, so the triangular QRD systolic array is retimed around this two-cycle latency.
+\textbf{We remove the delay unit at the bottom-right diagonal position} to keep the array outputs aligned.
 The detailed timing schedule is given in the next section.
 
 Figure~\ref{fig:qrd-systolic} shows the resulting array: 
-three \texttt{CORDIC\_PE} blocks (2-cycle), one single-cycle \texttt{Delay\_Unit}, and one two-cycle \texttt{Delay2\_Unit}.
+three CORDIC PE blocks (2-cycle), one single-cycle Delay Unit, and one two-cycle Delay 2 Unit.
 
 \begin{figure}[H]
     \centering
@@ -353,22 +362,22 @@ three \texttt{CORDIC\_PE} blocks (2-cycle), one single-cycle \texttt{Delay\_Unit
 
 \section{EVD Architecture}
 
-The top-level \texttt{EVD} module wraps the QRD systolic array with an input delay unit (\texttt{IDU}), matrix registers, and a three-state FSM.
-Table~\ref{tab:evd-fsm} summarizes the control flow; Figure~\ref{fig:evd-timing} gives the cycle-by-cycle hardware schedule.
+The top-level EVD module wraps the QRD systolic array with an input delay unit (IDU), matrix registers, and a three-state FSM.
+Table~\ref{tab:evd-fsm} summarizes the control flow. Figure~\ref{fig:evd-timing} gives the cycle-by-cycle hardware schedule.
 
 \begin{table}[H]
 \centering
 \caption{EVD FSM States}
 \label{tab:evd-fsm}
 \vspace{0.15em}
-\setlength{\tabcolsep}{8pt}
+\setlength{\tabcolsep}{10pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.2cm} X}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}X}
 \toprule
 \textbf{State} & \textbf{Function} \\
 \midrule
 \texttt{IDLE} &
-When \texttt{InValid} is asserted, stream the external $3 \times 3$ input matrix into the systolic array over three cycles, then enter \texttt{PROCESS}. \\
+When InValid is asserted, stream the external $3 \times 3$ input matrix into the systolic array over three cycles, then enter \texttt{PROCESS}. \\
 \texttt{PROCESS} &
 Run seven QR iterations.
 Each iteration takes 15 cycles: feed $U$ for eigenvector update, feed $R^{\mathsf{T}}$ for $T$ update, then feed the updated $T$ back into the array. \\
@@ -378,8 +387,10 @@ After the seventh iteration, stream the eigenvalues and the three rows of $U$ (e
 \end{tabularx}
 \end{table}
 
-In \texttt{PROCESS}, the FSM counter (\texttt{cnt}) schedules matrix reads, \texttt{TEMP} buffering, and \texttt{U\_REG} updates so that systolic inputs and outputs remain aligned with the two-cycle \texttt{CORDIC\_PE} latency.
+In \texttt{PROCESS}, the FSM counter (cnt) schedules reads from the U Register, updates to the Output Buffer, and systolic handshaking so that inputs and outputs remain aligned with the two-cycle CORDIC PE latency.
 Figure~\ref{fig:evd-timing} tabulates this schedule for the \texttt{IDLE} load phase and one \texttt{PROCESS} iteration.
+
+It is worth noting that lifetime-table analysis of the Output Buffer shows that the minimum number of registers required is \textbf{five}.
 
 \begin{figure}[H]
     \centering
@@ -390,9 +401,7 @@ Figure~\ref{fig:evd-timing} tabulates this schedule for the \texttt{IDLE} load p
 
 \newpage
 
-In the output buffer, lifetime-table analysis shows that the minimum number of registers required is \textbf{five}.
-
-One complete EVD run finishes in \textbf{112 clock cycles} from input load to the last output word.
+According the Figure~\ref{fig:evd-timing}, One complete EVD run finishes in \textbf{112 clock cycles} from input load to the last output word.
 Table~\ref{tab:evd-latency} breaks this down by FSM phase.
 
 \begin{table}[H]
@@ -415,11 +424,12 @@ Table~\ref{tab:evd-latency} breaks this down by FSM phase.
 \end{tabular}
 \end{table}
 
-Guided by the timing schedule in Figure~\ref{fig:evd-timing}, the three-state FSM acts as the \texttt{EVD} controller.
-It steers \texttt{InData} through an input buffer (data pre-processor and skew-aligned \texttt{IDU}), the systolic-array-based QRD core, and an output buffer (\texttt{TEMP} staging and \texttt{EV\_REG}).
-
-During \texttt{PROCESS}, feedback from the output buffer closes the $U$ and $T$ update loop; in \texttt{OUT}, the controller streams eigenvalues and eigenvectors from \texttt{EV\_REG} and \texttt{U\_REG} to \texttt{OutData}.
-Figure~\ref{fig:evd-arch} shows the resulting top-level architecture.
+A three-state FSM controls the datapath according to the schedule in Figure~\ref{fig:evd-timing}.
+The pre-processor selects the systolic-array inputs on each cycle (external matrix, U Register, or Output Buffer), and the IDU aligns them with the two-cycle CORDIC PE latency.
+$R$ and $T$ are staged in an Output Buffer. $U$ is stored in a U Register.
+In \texttt{PROCESS}, the FSM reads both buffers and feeds the array for each QR iteration.
+In \texttt{OUT}, eigenvalues come from the Output Buffer and eigenvectors from the U Register.
+Figure~\ref{fig:evd-arch} shows the top-level architecture.
 
 \begin{figure}[H]
     \centering
@@ -516,11 +526,13 @@ provides the best area--timing trade-off.
 
 \newpage
 
-% ─────────────────────────────────────────────
-\chapter{Section 7: Design Innovations and Team Contributions}
-% ─────────────────────────────────────────────
 
-\section{Team Contributions}
+\chapter{Section 7: Design Innovations}
+
+
+% ─────────────────────────────────────────────
+\chapter{Section 8: Team Contributions}
+% ─────────────────────────────────────────────
 
 \begin{table}[H]
 \centering
@@ -535,9 +547,9 @@ provides the best area--timing trade-off.
 \makecell{\textbf{MING-HONG,LIN}} &
 \makecell{\textbf{YING-CHENG,CHEN}} \\
 \midrule
-Algorithm Research and Floating-Point Modeling       & \ding{51} & \ding{51} \\
-Bit-True Model Development                           & \ding{51} & \ding{51} \\
-Hardware Word-Length and Accuracy Analysis           & \ding{51} & \ding{51} \\
+Algorithm Research and Configuration Analysis        & \ding{51} & \ding{51} \\
+Fixed-Point Bit-True Model Development               & \ding{51} & \ding{51} \\
+Total Word-Length and Accuracy Analysis              & \ding{51} & \ding{51} \\
 Hardware Architecture and Control Flow Design        & \ding{51} & \ding{51} \\
 RTL Design                                           & \ding{51} & \ding{51} \\
 Testbench Development and Unit Verification          & \ding{51} & \ding{51} \\
@@ -548,8 +560,12 @@ Hardware Optimization                                & \ding{51} & \ding{51} \\
 Area-Time Product Evaluation                         & \ding{51} & \ding{51} \\
 Result Analysis and Visualization                    & \ding{51} & \ding{51} \\
 Report Writing                                       & \ding{51} & \ding{51} \\
+\midrule
+\textbf{Weight}                                      & \textbf{50\%} & \textbf{50\%} \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \end{document}
+
+
