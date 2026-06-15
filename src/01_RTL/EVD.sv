@@ -28,7 +28,6 @@ module EVD(
     logic InMode;
 
     logic signed [`DATA_WIDTH-1:0] U_REG [0:`MATRIX_SIZE-1][0:`MATRIX_SIZE-1];
-    logic signed [`DATA_WIDTH-1:0] EV_REG [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] IDUIn [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] IDUOut [0:`MATRIX_SIZE-1];
     logic signed [`DATA_WIDTH-1:0] QRDOut [0:`MATRIX_SIZE-1];
@@ -55,20 +54,22 @@ module EVD(
         endcase
     end
 
-    always_ff @(posedge clk) begin : IO_COUNTER
-        if(state==IDLE&&InValid) io_cnt <= io_cnt + 1;
+    always_ff @(posedge clk or negedge rst_n) begin : IO_COUNTER
+        if(!rst_n) io_cnt <= 0;
+        else if(state==IDLE&&InValid) io_cnt <= io_cnt + 1;
         else if(state==OUT) io_cnt <= io_cnt + 1;
         else io_cnt <= 0;
     end
 
-    always_ff @(posedge clk) begin : COUNTER
-        if(state==PROCESS) cnt <= (cnt==4'd14)? 0 : cnt + 1;
+    always_ff @(posedge clk or negedge rst_n) begin : COUNTER
+        if(!rst_n) cnt <= 0;
+        else if(state==PROCESS) cnt <= (cnt==4'd14)? 0 : cnt + 1;
         else if(state==OUT) cnt <= cnt + 1;
         else cnt <= 0;
     end
 
-    always_ff @(posedge clk) begin : ITERATION
-        if(state==IDLE) iter_cnt <= 0;
+    always_ff @(posedge clk or negedge rst_n) begin : ITERATION
+        if(!rst_n) iter_cnt <= 0;
         else if(cnt==4'd14) iter_cnt <= iter_cnt + 1;
     end
 
@@ -163,8 +164,8 @@ module EVD(
         end
     end
 
-    always_ff @(posedge clk) begin : OUTPUT_BUFFER
-        if(state==IDLE) begin
+    always_ff @(posedge clk or negedge rst_n) begin : OUTPUT_BUFFER
+        if(!rst_n) begin
             for(int m = 0; m < 5; m++) TEMP[m] <= 0;
         end
         else begin 
@@ -183,7 +184,9 @@ module EVD(
                 4'd6: TEMP[2] <= QRDOut[2];     // Save R22
                 4'd10: TEMP[0] <= QRDOut[0];    // Save T00
                 4'd11: TEMP[1] <= QRDOut[0];    // Save T01
-                4'd12: TEMP[2] <= QRDOut[0];    // Save T02 
+                4'd12: TEMP[2] <= QRDOut[0];    // Save T02
+                4'd13: TEMP[3] <= QRDOut[1];    // Save T11
+                4'd14: TEMP[4] <= QRDOut[2];    // Save T22
             endcase
         end
     end
@@ -195,24 +198,15 @@ module EVD(
         .InData(IDUOut),
         .OutData(QRDOut));
 
-    always @(posedge clk) begin
-        if(state==IDLE) begin 
-            for(int m = 0; m < `MATRIX_SIZE; m++) EV_REG[m] <= 0;
-        end
-        else if(state==PROCESS && iter_cnt == 4'd6) begin
-            case(cnt) 
-                4'd10: EV_REG[0] <= QRDOut[0];  // T00 
-                4'd13: EV_REG[1] <= QRDOut[1];  // T11
-                4'd14: EV_REG[2] <= QRDOut[2];  // T22
-            endcase
-        end
-    end
-
     always_comb begin: OUTPUT_BLOCK 
         if(state==OUT) begin
             OutValid = 1;
             case(io_cnt)
-                4'd0: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = EV_REG[m]; 
+                4'd0: begin 
+                    OutData[0] = TEMP[0];
+                    OutData[1] = TEMP[3];
+                    OutData[2] = TEMP[4];
+                end 
                 4'd1: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[0][m];
                 4'd2: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[1][m];
                 4'd3: for(int m = 0; m < `MATRIX_SIZE; m++) OutData[m] = U_REG[2][m];
