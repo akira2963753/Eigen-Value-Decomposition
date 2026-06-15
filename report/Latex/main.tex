@@ -255,6 +255,8 @@ Therefore, Extra bits are spent only at this multiply-and-round point, not acros
 \chapter{Section 2: Bit-True Model Verification}
 % ─────────────────────────────────────────────
 
+\section{RMSE Per Pattern}
+
 We evaluate the bit-true model on all 11 patterns in \texttt{Final11Pattern.mat} with $B = 11$, $N_{\mathrm{stage}} = 8$, and $\mathrm{MAX\_ITER} = 7$.
 Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_v$ per pattern; both remain below $10^{-2}$.
 
@@ -271,6 +273,93 @@ Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_
 \chapter{Section 3: Hardware Architecture and Control}
 % ─────────────────────────────────────────────
 
+\section{CORDIC PE Architecture}
+
+We follow the Homework~4 CORDIC PE design: inputs are preconditioned in the initial stage, and the eight CORDIC micro-rotation stages are unfolded and pipelined to maximize throughput.
+For this EVD application, \textbf{the exact rotation angle $\theta$ does not need to be stored.}
+Vectoring mode records each micro-rotation direction in a rotational direction register (RDR) and rotation mode replays those directions on the remaining matrix entries.
+
+All $\theta$-related arithmetic in the CORDIC datapath can therefore be removed, improving PPA (power, performance, and area).
+Figure~\ref{fig:cordic-pe} shows the resulting PE architecture.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{CORDIC_PE.png}
+    \caption{CORDIC PE Architecture.}
+    \label{fig:cordic-pe}
+\end{figure}
+
+\newpage
+
+\section{Systolic Array-Based QRD Architecture}
+
+Each \texttt{CORDIC\_PE} produces one result every two cycles, so the triangular QRD systolic array is retimed around this two-cycle latency.
+We remove the delay unit at the bottom-right diagonal position and route the vertical datapath directly into the output row, so horizontal and vertical streams stay aligned at the array outputs.
+The detailed timing schedule is given in the next section.
+
+Figure~\ref{fig:qrd-systolic} shows the resulting array: 
+three \texttt{CORDIC\_PE} blocks (2-cycle), one single-cycle \texttt{Delay\_Unit}, and one two-cycle \texttt{Delay2\_Unit}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{QRD-Systolic-Array.png}
+    \caption{Systolic array-based QRD architecture.}
+    \label{fig:qrd-systolic}
+\end{figure}
+
+\newpage
+
+\section{EVD Architecture}
+
+The top-level \texttt{EVD} module wraps the QRD systolic array with an input delay unit (\texttt{IDU}), matrix registers, and a three-state FSM.
+Table~\ref{tab:evd-fsm} summarizes the control flow; Figure~\ref{fig:evd-timing} gives the cycle-by-cycle hardware schedule.
+
+\begin{table}[H]
+\centering
+\caption{EVD FSM States}
+\label{tab:evd-fsm}
+\vspace{0.15em}
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.2cm} X}
+\toprule
+\textbf{State} & \textbf{Function} \\
+\midrule
+\texttt{IDLE} &
+When \texttt{InValid} is asserted, stream the external $3 \times 3$ input matrix into the systolic array over three cycles, then enter \texttt{PROCESS}. \\
+\texttt{PROCESS} &
+Run seven QR iterations.
+Each iteration takes 15 cycles: feed $U$ for eigenvector update, feed $R^{\mathsf{T}}$ for $T$ update, then feed the updated $T$ back into the array. \\
+\texttt{OUT} &
+After the seventh iteration, stream the eigenvalues and the three rows of $U$ (eigenvectors) to the output ports over four cycles, then return to \texttt{IDLE}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+In \texttt{PROCESS}, the FSM counter (\texttt{cnt}) schedules matrix reads, \texttt{TEMP} buffering, and \texttt{U\_REG} updates so that systolic inputs and outputs remain aligned with the two-cycle \texttt{CORDIC\_PE} latency.
+Figure~\ref{fig:evd-timing} tabulates this schedule for the \texttt{IDLE} load phase and one \texttt{PROCESS} iteration.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure4.png}
+    \caption{Hardware timing schedule (\texttt{IDLE} input load and one \texttt{PROCESS} iteration).}
+    \label{fig:evd-timing}
+\end{figure}
+
+\newpage
+
+Guided by the timing schedule in Figure~\ref{fig:evd-timing}, the three-state FSM acts as the \texttt{EVD} controller.
+It steers \texttt{InData} through an input buffer (data pre-processor and skew-aligned \texttt{IDU}), the systolic-array-based QRD core, and an output buffer (\texttt{TEMP} staging and \texttt{EV\_REG}).
+During \texttt{PROCESS}, feedback from the output buffer closes the $U$ and $T$ update loop; in \texttt{OUT}, the controller streams eigenvalues and eigenvectors from \texttt{EV\_REG} and \texttt{U\_REG} to \texttt{OutData}.
+Figure~\ref{fig:evd-arch} shows the resulting top-level architecture.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{EVD.png}
+    \caption{Top-level EVD architecture.}
+    \label{fig:evd-arch}
+\end{figure}
+
 \newpage
 
 % ─────────────────────────────────────────────
@@ -282,6 +371,17 @@ Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_
 % ─────────────────────────────────────────────
 \chapter{Section 5: Fixed-Point vs.\ Hardware Consistency}
 % ─────────────────────────────────────────────
+
+We compare RTL behavioral simulation results with the fixed-point bit-true model from Section~1.3.
+The outputs are consistent across all 11 patterns.
+Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure5.png}
+    \caption{RTL vs.\ bit-true model error, pattern~8.}
+    \label{fig:hw-consistency}
+\end{figure}
 
 \newpage
 
