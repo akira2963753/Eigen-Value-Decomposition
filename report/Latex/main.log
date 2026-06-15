@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.4.30)  15 JUN 2026 18:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.4.30)  15 JUN 2026 19:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -934,7 +934,7 @@ Package pdftex.def Info: ../Figure/figure4.png  used on input line 350.
 <../Figure/EVD.png, id=176, 500.1084pt x 291.2481pt>
 File: ../Figure/EVD.png Graphic file (type png)
 <use ../Figure/EVD.png>
-Package pdftex.def Info: ../Figure/EVD.png  used on input line 388.
+Package pdftex.def Info: ../Figure/EVD.png  used on input line 390.
 (pdftex.def)             Requested size: 495.07779pt x 288.32317pt.
  [9 <../Figure/EVD.png>]
 Chapter 4.
@@ -945,7 +945,7 @@ Chapter 5.
 <../Figure/figure5.png, id=189, 787.743pt x 244.9953pt>
 File: ../Figure/figure5.png Graphic file (type png)
 <use ../Figure/figure5.png>
-Package pdftex.def Info: ../Figure/figure5.png  used on input line 411.
+Package pdftex.def Info: ../Figure/figure5.png  used on input line 413.
 (pdftex.def)             Requested size: 495.07779pt x 153.97775pt.
 [11
 
@@ -974,7 +974,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  75i,15n,117p,1063b,1112s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\harry\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/ebgaramond/EBGaramond-Bold.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/ebgaramond/EBGaramond-Regular.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/NewTXMI.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txexs.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txmiaX.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txsys.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on main.pdf (14 pages, 880911 bytes).
+Output written on main.pdf (14 pages, 881252 bytes).
 PDF statistics:
  301 PDF objects out of 1000 (max. 8388607)
  46 named destinations out of 1000 (max. 500000)
