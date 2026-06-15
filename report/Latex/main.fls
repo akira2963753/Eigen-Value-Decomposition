@@ -185,6 +185,12 @@ INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\siunitx\siunitx.sty
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\siunitx\siunitx.sty
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\translations\translations.sty
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\translations\translations.sty
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xfp\xfp.sty
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xfp\xfp.sty
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\psnfss\pifont.sty
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\psnfss\pifont.sty
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\psnfss\upzd.fd
@@ -202,8 +208,6 @@ INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\ebgaramond\t1ebgara
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\ebgaramond\t1ebgaramond-lf.fd
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\ebgaramond\t1ebgaramond-lf.fd
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\tfm\public\ebgaramond\EBGaramond-Regular-lf-t1.tfm
-INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
-INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT .\main.aux
 INPUT .\main.aux
 INPUT main.aux

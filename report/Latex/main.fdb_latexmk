@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1781521673.03526 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781521677.65966 0
+["pdflatex"] 1781521833.03111 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781521837.68905 0
   "../Figure/CORDIC_PE.png" 1781507140 354423 4bc5e92cc1a616693c45bc62880e50fe ""
   "../Figure/EVD.png" 1781423130 175688 beec5a74f7f6e875dc993bbb233404f9 ""
   "../Figure/QRD-Systolic-Array.png" 1781423078 196760 695a197f88cf2ed41e8c8792616a9ff1 ""
@@ -131,6 +131,8 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/kvoptions/kvoptions.sty" 1656236481 22555 6d8e155cfef6d82c3d5c742fea7c992e ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/kvsetkeys/kvsetkeys.sty" 1665066333 13815 760b0c02f691ea230f5359c4e1de23a7 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1774811737 30909 7dedb28cb21a1e79c47a35a35ae3c507 ""
+  "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/l3kernel/expl3.sty" 1774812389 6558 f72ebe51bdca4990db99e72c8133397c ""
+  "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/l3packages/xfp/xfp.sty" 1761203377 1249 6117a40cb05a1d50230f000344c582aa ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.cfg" 1763898348 1865 73df61e45e2dfdc239ef37ab16d87d6a ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.sty" 1763898348 81627 6a9c17f89f356724d1c9813b7025f0c1 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstmisc.sty" 1763898348 77105 002e983b638eadbf04e580642335f689 ""
@@ -169,11 +171,11 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781521672 20127 51c3fc4aca799e095656f590415458ce ""
-  "main.aux" 1781521677 6573 4dff7d02bdf6db7ddcce8432c886aa21 "pdflatex"
-  "main.out" 1781521677 3717 f1dc06b798dc12a17f7209c2e756012b "pdflatex"
-  "main.tex" 1781521672 20127 51c3fc4aca799e095656f590415458ce ""
-  "main.toc" 1781521677 1539 71c8f9ed2a03079450b268cf5e72ae3d "pdflatex"
+  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781521827 23165 f6eaf9a92ef547e86c6b11943f3ee3a5 ""
+  "main.aux" 1781521837 6866 17fbe4a6d4e15256771dbab2076d496b "pdflatex"
+  "main.out" 1781521837 3717 f1dc06b798dc12a17f7209c2e756012b "pdflatex"
+  "main.tex" 1781521827 23165 f6eaf9a92ef547e86c6b11943f3ee3a5 ""
+  "main.toc" 1781521837 1539 71c8f9ed2a03079450b268cf5e72ae3d "pdflatex"
   (generated)
   "main.aux"
   "main.log"
