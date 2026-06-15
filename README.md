@@ -23,6 +23,18 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 | `QRD` | [src/01_RTL/QRD.sv](src/01_RTL/QRD.sv) | QR decomposition systolic array (3 CORDIC PEs + delay units). |
 | `CORDIC_PE` | [src/01_RTL/CORDIC_PE.sv](src/01_RTL/CORDIC_PE.sv) | CORDIC processing element (Vectoring / Rotation modes, 8 stages). |
 
+**Top-level (EVD)**
+
+![EVD architecture](report/Figure/EVD.png)
+
+**Systolic-array QRD**
+
+![QRD systolic array](report/Figure/QRD-Systolic-Array.png)
+
+**CORDIC PE**
+
+![CORDIC PE](report/Figure/CORDIC_PE.png)
+
 ## Specifications
 
 | Item | Value |
@@ -71,8 +83,4 @@ cd src/03_GATESIM && ./03_run    # vcs ... +define+GATE_SIM
 
 ## Tools
 
-SystemVerilog (IEEE 1800-2017) · Synopsys VCS + Verdi · Synopsys Design Compiler.
-
-## Authors
-
-Marco (M11407439) & Innis (B11107027)
+SystemVerilog · Synopsys VCS + Verdi · Synopsys Design Compiler
