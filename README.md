@@ -25,7 +25,7 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 
 | Top-level (EVD) | Systolic-array QRD |
 |:---:|:---:|
-| ![EVD architecture](report/Figure/EVD.png) | ![QRD systolic array](report/Figure/QRD-Systolic-Array.png) |
+| <img src="report/Figure/EVD.png" width="420" height="280"> | <img src="report/Figure/QRD-Systolic-Array.png" width="420" height="280"> |
 
 **CORDIC PE**
 
