@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1781513977.03021 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781513981.51883 0
+["pdflatex"] 1781518612.22655 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781518616.65293 0
   "../Figure/CORDIC_PE.png" 1781507140 354423 4bc5e92cc1a616693c45bc62880e50fe ""
   "../Figure/EVD.png" 1781423130 175688 beec5a74f7f6e875dc993bbb233404f9 ""
   "../Figure/QRD-Systolic-Array.png" 1781423078 196760 695a197f88cf2ed41e8c8792616a9ff1 ""
@@ -169,11 +169,11 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781513976 20008 e7e602ce0ab3398c47675d8dce2b878d ""
-  "main.aux" 1781513981 6573 4dff7d02bdf6db7ddcce8432c886aa21 "pdflatex"
-  "main.out" 1781513981 3717 f1dc06b798dc12a17f7209c2e756012b "pdflatex"
-  "main.tex" 1781513976 20008 e7e602ce0ab3398c47675d8dce2b878d ""
-  "main.toc" 1781513981 1539 71c8f9ed2a03079450b268cf5e72ae3d "pdflatex"
+  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781518611 20008 0a0eabd0f9b16c1a712a406594d14f26 ""
+  "main.aux" 1781518616 6573 4dff7d02bdf6db7ddcce8432c886aa21 "pdflatex"
+  "main.out" 1781518616 3717 f1dc06b798dc12a17f7209c2e756012b "pdflatex"
+  "main.tex" 1781518611 20008 0a0eabd0f9b16c1a712a406594d14f26 ""
+  "main.toc" 1781518616 1539 71c8f9ed2a03079450b268cf5e72ae3d "pdflatex"
   (generated)
   "main.aux"
   "main.log"

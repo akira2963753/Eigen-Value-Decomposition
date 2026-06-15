@@ -354,7 +354,7 @@ Figure~\ref{fig:evd-timing} tabulates this schedule for the \texttt{IDLE} load p
 
 \newpage
 
-One complete EVD run finishes in \textbf{114 clock cycles} from input load to the last output word.
+One complete EVD run finishes in \textbf{112 clock cycles} from input load to the last output word.
 Table~\ref{tab:evd-latency} breaks this down by FSM phase.
 
 \begin{table}[H]
@@ -370,9 +370,9 @@ Table~\ref{tab:evd-latency} breaks this down by FSM phase.
 \midrule
 \texttt{IDLE} (input load)                    & 3 \\
 \texttt{PROCESS} ($7$ iterations $\times$ $15$ cycles) & 105 \\
-\texttt{OUT} (eigenvalues and eigenvectors)   & 6 \\
+\texttt{OUT} (eigenvalues and eigenvectors)   & 4 \\
 \midrule
-\textbf{Total}                                & \textbf{114} \\
+\textbf{Total}                                & \textbf{112} \\
 \bottomrule
 \end{tabular}
 \end{table}

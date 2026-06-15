@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.4.30)  15 JUN 2026 16:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.4.30)  15 JUN 2026 18:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -966,15 +966,15 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: F1DC06B798DC12A17F7209C2E756012B;3717.
  ) 
 Here is how much of TeX's memory you used:
- 24078 strings out of 467691
- 449442 string characters out of 5414987
+ 24075 strings out of 467691
+ 449358 string characters out of 5414987
  864008 words of memory out of 5000000
  52542 multiletter control sequences out of 15000+600000
- 793142 words of font info for 242 fonts, out of 8000000 for 9000
+ 792870 words of font info for 240 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,15n,117p,1063b,1112s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\harry\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/ebgaramond/EBGaramond-Bold.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/ebgaramond/EBGaramond-Regular.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/NewTXMI.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txexs.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txmiaX.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/public/newtx/txsys.pfb><C:/Users/harry/AppData/Local/Programs/MiKTeX/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on main.pdf (14 pages, 880918 bytes).
+Output written on main.pdf (14 pages, 880911 bytes).
 PDF statistics:
  301 PDF objects out of 1000 (max. 8388607)
  46 named destinations out of 1000 (max. 500000)

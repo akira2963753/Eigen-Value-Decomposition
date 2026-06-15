@@ -134,9 +134,9 @@ module TESTBED();
             evd_latency_m = 0;
             prev_out = out_valid;
             forever begin
-                @(posedge clk);
-                evd_latency_m++;
+                @(negedge clk);
                 if (prev_out && !out_valid) break;
+                evd_latency_m++;
                 prev_out = out_valid;
             end
             evd_lat_done = 1;
