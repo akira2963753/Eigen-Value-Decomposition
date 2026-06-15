@@ -471,6 +471,10 @@ INPUT ..\Figure\figure5.png
 INPUT ..\Figure\figure5.png
 INPUT ..\Figure\figure5.png
 INPUT ..\Figure\figure5.png
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\tfm\public\ebgaramond\EBGaramond-Italic-lf-t1.tfm
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\vf\public\ebgaramond\EBGaramond-Italic-lf-t1.vf
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\tfm\public\ebgaramond\EBGaramond-Italic-lf-t1--base.tfm
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\ebgaramond\ebg_utfkrl.enc
 INPUT main.aux
 INPUT .\main.out
 INPUT .\main.out
@@ -478,6 +482,8 @@ INPUT C:\Users\harry\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi650\ect
 INPUT C:\Users\harry\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi650\ectt1200.pk
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Bold.pfb
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Bold.pfb
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Italic.pfb
+INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Italic.pfb
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Regular.pfb
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\ebgaramond\EBGaramond-Regular.pfb
 INPUT C:\Users\harry\AppData\Local\Programs\MiKTeX\fonts\type1\public\newtx\NewTXMI.pfb

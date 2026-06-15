@@ -529,6 +529,55 @@ provides the best area--timing trade-off.
 
 \chapter{Section 7: Design Innovations}
 
+\section{Angle-Free CORDIC via Rotational Direction Recording}
+
+A conventional CORDIC carries an explicit angle path: each micro-rotation adds or
+subtracts a stored $\arctan(2^{-i})$ constant, requiring an arctangent ROM, an angle
+register, and an angle adder. In the iterative QR EVD the Givens angle is never needed
+as a number, only its \emph{action} on the matrix. We therefore record only the
+per-stage rotation directions in an $8$-bit \emph{rotational direction register}
+(RDR) during vectoring, and replay them during rotation, reproducing the same rotation
+without $\theta$.
+
+\section{Residual-Preserving Bypass Path}
+
+When a PE completes a vectoring operation, its $Y$ output is the eliminated
+sub-diagonal entry, which is ideally zero but in fixed-point arithmetic is only a
+small residual. This residual cannot simply be forced to zero, since clamping a value
+that is not truly zero injects its own error. Yet if the residual is allowed to flow
+into the next PE and be rotated, the rotation mixes $X$ into $Y$ through successive
+shift-adds and amplifies the small residual into a much larger error. Neither
+clamping nor rotating the residual is acceptable.
+
+We resolve this with a bypass path. The downstream PE is preceded by a delay unit
+that watches the upstream \texttt{OutMode}: a value produced by a vectoring operation
+is tagged, and after a two-cycle alignment matching the PE latency the tag is raised
+as a \texttt{Pass} flag. When \texttt{Pass} is asserted, the PE skips every
+micro-rotation and the gain-scaling multiply, forwarding $X$ and $Y$ unchanged.
+
+The residual is therefore neither clamped nor amplified: it is carried through
+untouched, keeping the accumulated error bounded across iterations, while the bypassed
+cycle additionally saves the rotation and scaling switching activity.
+
+\section{Schedule-Driven Register Minimization}
+
+Pipelining each CORDIC PE into two stages raises throughput but skews the array
+outputs, so extra alignment registers are needed at the inputs and the
+transpose/output buffer. Their count would dominate the area. We therefore size the
+buffers from the cycle-by-cycle schedule of Fig.~\ref{fig:evd-timing} rather than by
+worst-case guessing. A lifetime analysis over that schedule shows the
+transpose/output buffer needs only \textbf{five} registers. The same schedule also exposes a redundant delay unit at the bottom-right diagonal,
+whose value is already aligned by the adjacent two-cycle PE latency; it is replaced by
+a direct wire (Fig.~\ref{fig:qrd-systolic}).
+
+\section{Localized Scaling-Factor Precision}
+
+As detailed in Section~1.4, CORDIC gain compensation is the only point that demands
+extra fractional precision. Rather than widening the global fractional width $B$ and
+inflating every register along the systolic datapath, we keep the datapath at $B$ and
+spend the additional bits solely at the final $X\times(1/K)$ multiply-and-round, so
+the precision cost is confined to a single node instead of being paid array-wide.
+
 
 % ─────────────────────────────────────────────
 \chapter{Section 8: Team Contributions}
