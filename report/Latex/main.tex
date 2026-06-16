@@ -498,14 +498,19 @@ of $U$ appear on \texttt{OutData}.
 The testbench exposes a latency monitor \texttt{evd\_latency\_m} that increments on every
 clock cycle from the rising edge of \texttt{InValid} until the falling edge of
 \texttt{OutValid}.
-As shown in the waveforms, one complete EVD run finishes in \textbf{112 clock cycles},
+As shown in the waveforms, one complete EVD run finishes in \textbf{112 clock cycles (M)},
 consistent with the latency breakdown in Table~\ref{tab:evd-latency}.
+
+For the required \textbf{test pattern 8}, the behavioral simulation yields
+$\mathrm{RMSE}_\lambda = 5.923380 \times 10^{-3}$ and
+$\mathrm{RMSE}_v = 7.921108 \times 10^{-3}$, both below the $10^{-2}$ criterion.
+
 
 \newpage
 
 \section{Post-Synthesis Simulation}
 
-We run gate-level simulation at the best-ATP from section 6, whose clock period
+We run gate-level simulation at the best-ATP from section 6, whose clock period $T_s$
 is \textbf{923,437 fs} (see the time scale in the upper-right corner of
 Figures~\ref{fig:post-syn-input} and~\ref{fig:post-syn-output}).
 The waveforms show that the results are fully consistent with the behavioral
@@ -524,10 +529,6 @@ simulation.
     \caption{Post-synthesis simulation waveform.}
     \label{fig:post-syn-output}
 \end{figure}
-
-For the required \textbf{test pattern 8}, the behavioral simulation yields
-$\mathrm{RMSE}_\lambda = 5.923380 \times 10^{-3}$ and
-$\mathrm{RMSE}_v = 7.921108 \times 10^{-3}$, both below the $10^{-2}$ criterion.
 
 \newpage
 
@@ -713,6 +714,39 @@ Report Writing                                       & \ding{51} & \ding{51} \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\newpage
+
+% ─────────────────────────────────────────────
+\appendix
+\begingroup
+\let\clearpage\relax
+\let\cleardoublepage\relax
+\chapter{Synthesis Reports for Best ATP Configuration}
+\endgroup
+
+\section{Timing Report}
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth,height=0.92\textheight,keepaspectratio]{report1.png}
+    \captionof{figure}{Critical-path timing report (max delay), part~1.}
+    \label{fig:timing-report-1}
+\end{center}
+
+\begin{center}
+    \includegraphics[width=0.8\linewidth,height=0.92\textheight,keepaspectratio]{report2.png}
+    \captionof{figure}{Critical-path timing report (max delay), part~2. Slack is
+    \SI{0.00}{ns} (MET).}
+    \label{fig:timing-report-2}
+\end{center}
+
+\section{Area Report}
+
+\begin{center}
+    \includegraphics[width=\linewidth]{report3.jpg}
+    \captionof{figure}{Post-synthesis area report.}
+    \label{fig:area-report}
+\end{center}
 
 \end{document}
 

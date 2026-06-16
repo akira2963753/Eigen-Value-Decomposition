@@ -21,3 +21,6 @@
 \contentsline {section}{\numberline {5.3}Schedule-Driven Register Minimization}{15}{section.5.3}%
 \contentsline {section}{\numberline {5.4}Decoupled Scaling-Factor Precision}{15}{section.5.4}%
 \contentsline {chapter}{\numberline {6}Section 6: Team Contributions}{16}{chapter.6}%
+\contentsline {chapter}{\numberline {A}Synthesis Reports for Best ATP Configuration}{17}{chapter.A}%
+\contentsline {section}{\numberline {A.1}Timing Report}{17}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Area Report}{19}{section.A.2}%

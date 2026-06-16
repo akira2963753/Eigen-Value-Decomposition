@@ -60,7 +60,7 @@ current_design $DESIGN
 ############################################
 # set Clock
 ############################################
-set cycle 1.0
+set cycle 0.923437
 
 create_clock -period $cycle -name clk   [get_ports clk]
 set_dont_touch_network                  [get_clocks clk]
@@ -128,7 +128,7 @@ write -format ddc      -hierarchy -output "./Netlist/${DESIGN}.ddc"
 write -format verilog  -hierarchy -output "./Netlist/${DESIGN}_syn.v"
 write_sdf -version 3.0 -context verilog ./Netlist/${DESIGN}.sdf
 write_sdc ./Netlist/${DESIGN}_syn.sdc -version 1.8
-sh sed -i {6i \`timescale 1ns/1ps} ./Netlist/${DESIGN}_syn.v
+sh sed -i {6i \`timescale 1fs/1fs} ./Netlist/${DESIGN}_syn.v
 
 report_timing
 report_area
