@@ -8,25 +8,27 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 
 ## Algorithm
 
-Given symmetric matrix **A** ∈ ℝ<sup>N×N</sup> (this project: N = 3):
+Given symmetric matrix $\mathbf{A} \in \mathbb{R}^{N \times N}$ (this project: $N = 3$):
 
-```
-// First phase
-[U_EVD^(0), A^(0)] = HessenbergReduction(A)
+$$
+\begin{aligned}
+&\text{// First phase} \\
+&[\mathbf{U}_{\mathrm{EVD}}^{(0)}, \mathbf{A}^{(0)}] = \mathrm{HessenbergReduction}(\mathbf{A}) \\[4pt]
+&\text{// Second phase, } i = 0 \\
+&\textbf{while } (\neg\text{converged}) \\
+&\quad \mathbf{T}^{(i)} = \mathbf{A}^{(i)} - \mu_i \mathbf{I} \\
+&\quad [\mathbf{Q}^{(i)}, \mathbf{R}^{(i)}] = \mathrm{QRD}(\mathbf{T}^{(i)}) \\
+&\quad \mathbf{T}^{(i+1)} = \mathbf{R}^{(i)} \mathbf{Q}^{(i)} \\
+&\quad \mathbf{A}^{(i+1)} = \mathbf{T}^{(i+1)} + \mu_i \mathbf{I} \\
+&\quad \mathbf{U}_{\mathrm{EVD}}^{(i+1)} = \mathbf{U}_{\mathrm{EVD}}^{(i)} \mathbf{Q}^{(i)} \\
+&\quad i = i + 1 \\
+&\textbf{End}
+\end{aligned}
+$$
 
-// Second phase, i = 0
-while (!converged)
-    T^(i)   = A^(i) − μ_i I
-    [Q^(i), R^(i)] = QRD(T^(i))
-    T^(i+1) = R^(i) Q^(i)
-    A^(i+1) = T^(i+1) + μ_i I
-    U_EVD^(i+1) = U_EVD^(i) Q^(i)
-    i = i + 1
-End
-```
-
-This design skips Hessenberg reduction (`A^(0) = A`, `U_EVD^(0) = I`) and runs a
-fixed 7 iterations without shift (`μ_i = 0`). Each `QRD(·)` is realized by Givens
+This design skips Hessenberg reduction ($\mathbf{A}^{(0)} = \mathbf{A}$,
+$\mathbf{U}_{\mathrm{EVD}}^{(0)} = \mathbf{I}$) and runs a fixed 7 iterations
+without shift ($\mu_i = 0$). Each $\mathrm{QRD}(\cdot)$ is realized by Givens
 rotations in a triangular CORDIC systolic array; vectoring mode records rotation
 directions and rotation mode replays them (angle-free CORDIC, no arctan ROM).
 
