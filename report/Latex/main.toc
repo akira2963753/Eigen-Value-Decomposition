@@ -12,11 +12,13 @@
 \contentsline {section}{\numberline {3.3}EVD Architecture}{8}{section.3.3}%
 \contentsline {section}{\numberline {3.4}Detailed Transpose Buffer (Output Buffer)}{10}{section.3.4}%
 \contentsline {chapter}{\numberline {4}Section 4: Hardware Simulation}{11}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Section 5: Fixed-Point vs.\ Hardware Consistency}{12}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Section 6: Area-Time Product}{13}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Section 7: Design Innovations}{14}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Angle-Free CORDIC via Rotational Direction Recording}{14}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Residual-Preserving Bypass Path}{14}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Schedule-Driven Register Minimization}{14}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Decoupled Scaling-Factor Precision}{14}{section.7.4}%
-\contentsline {chapter}{\numberline {8}Section 8: Team Contributions}{15}{chapter.8}%
+\contentsline {section}{\numberline {4.1}Behavioral Simulation}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Post-Synthesis Simulation}{12}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Section 5: Fixed-Point vs.\ Hardware Consistency}{13}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Section 6: Area-Time Product}{14}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Section 7: Design Innovations}{15}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Angle-Free CORDIC via Rotational Direction Recording}{15}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Residual-Preserving Bypass Path}{15}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Schedule-Driven Register Minimization}{15}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Decoupled Scaling-Factor Precision}{15}{section.7.4}%
+\contentsline {chapter}{\numberline {8}Section 8: Team Contributions}{16}{chapter.8}%

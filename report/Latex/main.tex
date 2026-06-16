@@ -467,14 +467,69 @@ $\mathbf{R}^{\mathsf{T}}$.
 \chapter{Section 4: Hardware Simulation}
 % ─────────────────────────────────────────────
 
+\section{Behavioral Simulation}
+We verify the RTL with Synopsys VCS and inspect waveforms in Verdi.
+Figure~\ref{fig:hw-sim-input} shows the \texttt{IDLE} phase: \texttt{InValid} is held
+for three cycles while the input matrix is streamed column-by-column on
+\texttt{InData}.
+Figure~\ref{fig:hw-sim-output} shows the \texttt{OUT} phase: after processing completes,
+\texttt{OutValid} is asserted for four cycles while the eigenvalues and the three rows
+of $U$ appear on \texttt{OutData}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Waveform1.png}
+    \caption{RTL simulation waveform: input matrix load (\texttt{IDLE}).}
+    \label{fig:hw-sim-input}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Waveform2.png}
+    \caption{RTL simulation waveform: eigenvalue/eigenvector output (\texttt{OUT}).}
+    \label{fig:hw-sim-output}
+\end{figure}
+
+The testbench exposes a latency monitor \texttt{evd\_latency\_m} that increments on every
+clock cycle from the rising edge of \texttt{InValid} until the falling edge of
+\texttt{OutValid}.
+As shown in the waveforms, one complete EVD run finishes in \textbf{112 clock cycles},
+consistent with the latency breakdown in Table~\ref{tab:evd-latency}.
+
+\newpage
+
+\section{Post-Synthesis Simulation}
+
+We run gate-level simulation at the best-ATP from section 6, whose clock period
+is \textbf{923,437 fs} (see the time scale in the upper-right corner of
+Figures~\ref{fig:post-syn-input} and~\ref{fig:post-syn-output}).
+The waveforms show that the results are fully consistent with the behavioral
+simulation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Waveform3.png}
+    \caption{Post-synthesis simulation waveform.}
+    \label{fig:post-syn-input}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Waveform4.png}
+    \caption{Post-synthesis simulation waveform.}
+    \label{fig:post-syn-output}
+\end{figure}
+
 \newpage
 
 % ─────────────────────────────────────────────
 \chapter{Section 5: Fixed-Point vs.\ Hardware Consistency}
 % ─────────────────────────────────────────────
 
-We compare RTL behavioral simulation results with the fixed-point bit-true model from Section~1.3.
-The outputs are consistent across all 11 patterns.
+Hardware outputs match the fixed-point bit-true model exactly on every test pattern.
+Figure~\ref{fig:rmse-patterns} plots the per-pattern RMSE against the reference;
+both $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_v$ remain below $10^{-2}$ for all
+11 patterns.
 Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
 
 \begin{figure}[H]
