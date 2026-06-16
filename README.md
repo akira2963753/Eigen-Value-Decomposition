@@ -6,14 +6,29 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 
 > NTU "DSP in VLSI" (ICDA5003), 2026 Spring — Final Project.
 
-## Key Features
+## Algorithm
 
-- **Iterative QR-based EVD** — repeated QR decomposition converges the diagonal to
-  the eigenvalues while accumulating the eigenvector matrix.
-- **Angle-free CORDIC PEs** — Vectoring mode records rotation directions, Rotation
-  mode replays them; no arctan ROM required.
-- **Systolic-array QR decomposition** — pipelined CORDIC PEs with delay/bypass units.
-- **Synthesized on TSMC 16nm** with an optimized area-time product.
+Given symmetric matrix **A** ∈ ℝ<sup>N×N</sup> (this project: N = 3):
+
+```
+// First phase
+[U_EVD^(0), A^(0)] = HessenbergReduction(A)
+
+// Second phase, i = 0
+while (!converged)
+    T^(i)   = A^(i) − μ_i I
+    [Q^(i), R^(i)] = QRD(T^(i))
+    T^(i+1) = R^(i) Q^(i)
+    A^(i+1) = T^(i+1) + μ_i I
+    U_EVD^(i+1) = U_EVD^(i) Q^(i)
+    i = i + 1
+End
+```
+
+This design skips Hessenberg reduction (`A^(0) = A`, `U_EVD^(0) = I`) and runs a
+fixed 7 iterations without shift (`μ_i = 0`). Each `QRD(·)` is realized by Givens
+rotations in a triangular CORDIC systolic array; vectoring mode records rotation
+directions and rotation mode replays them (angle-free CORDIC, no arctan ROM).
 
 ## Architecture
 
@@ -22,14 +37,6 @@ elements arranged as a systolic array, synthesized on TSMC 16nm.
 | `EVD` | [src/01_RTL/EVD.sv](src/01_RTL/EVD.sv) | Top module. 3-state FSM (IDLE / PROCESS / OUT), iteration and I/O control. |
 | `QRD` | [src/01_RTL/QRD.sv](src/01_RTL/QRD.sv) | QR decomposition systolic array (3 CORDIC PEs + delay units). |
 | `CORDIC_PE` | [src/01_RTL/CORDIC_PE.sv](src/01_RTL/CORDIC_PE.sv) | CORDIC processing element (Vectoring / Rotation modes, 8 stages). |
-
-| Top-level (EVD) | Systolic-array QRD |
-|:---:|:---:|
-| <img src="report/Figure/EVD.png" width="420" height="280"> | <img src="report/Figure/QRD-Systolic-Array.png" width="420" height="280"> |
-
-**CORDIC PE**
-
-![CORDIC PE](report/Figure/CORDIC_PE.png)
 
 ## Specifications
 

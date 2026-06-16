@@ -520,13 +520,16 @@ simulation.
     \label{fig:post-syn-output}
 \end{figure}
 
+For the required \textbf{test pattern 8}, the behavioral simulation yields
+$\mathrm{RMSE}_\lambda = 5.923380 \times 10^{-3}$ and
+$\mathrm{RMSE}_v = 7.921108 \times 10^{-3}$, both below the $10^{-2}$ criterion.
+
 \newpage
 
-% ─────────────────────────────────────────────
-\chapter{Section 5: Fixed-Point vs.\ Hardware Consistency}
-% ─────────────────────────────────────────────
+\section{Fixed-Point vs.\ Hardware Consistency}
 
 Hardware outputs match the fixed-point bit-true model exactly on every test pattern.
+
 Figure~\ref{fig:rmse-patterns} plots the per-pattern RMSE against the reference;
 both $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_v$ remain below $10^{-2}$ for all
 11 patterns.
@@ -542,7 +545,7 @@ Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
 \newpage
 
 % ─────────────────────────────────────────────
-\chapter{Section 6: Area-Time Product}
+\chapter{Section 5: Area-Time Product}
 
 The Area-Time Product (ATP) is used to evaluate the trade-off between hardware
 area and execution time. For each synthesis result, ATP is calculated as
@@ -618,7 +621,7 @@ provides the best area--timing trade-off.
 \newpage
 
 
-\chapter{Section 7: Design Innovations}
+\chapter{Section 6: Design Innovations}
 
 \section{Angle-Free CORDIC via Rotational Direction Recording}
 
@@ -671,7 +674,7 @@ the precision cost is confined to a single node instead of being paid array-wide
 
 
 % ─────────────────────────────────────────────
-\chapter{Section 8: Team Contributions}
+\chapter{Section 7: Team Contributions}
 % ─────────────────────────────────────────────
 
 \begin{table}[H]
