@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1781611247.82237 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781611256.16791 0
+["pdflatex"] 1781626355.40076 "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" "main.pdf" "main" 1781626364.70791 0
   "../Figure/CORDIC_PE.png" 1781507140 354423 4bc5e92cc1a616693c45bc62880e50fe ""
   "../Figure/EVD.png" 1781536363 163518 da0aca955a5385b09f109f07937040ca ""
   "../Figure/OutputBuffer.png" 1781542494 165873 121c6cceee054a4d68361fd1cd2e8616 ""
@@ -13,6 +13,7 @@
   "../Figure/figure3.png" 1781430064 57355 195294827cd7064b90b7322e25d0472c ""
   "../Figure/figure4.png" 1781521381 99028 a495726d057a9f45aca5e7f76caca7d5 ""
   "../Figure/figure5.png" 1781511265 42245 4e2f4ea23c2021e202bd6c98ca6450c2 ""
+  "../Figure/figure6.png" 1781625846 89314 873c2a26a1a1c92a37655a745f775805 ""
   "C:/Users/harry/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1781536397 226832 09cb957201933c4b9df8354b35d52089 ""
   "C:/Users/harry/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi650/ectt1200.pk" 1781536397 26416 bc6c3414884872f2b9d95e50ba6e8e6c ""
   "C:/Users/harry/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1777556409 13350272 0df59464e53e3101262c84f52d812bbe ""
@@ -185,11 +186,11 @@
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/harry/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781611246 30417 d6f553fa5de1434ad6349c80dc547ba0 ""
-  "main.aux" 1781611255 9226 7c6f5052d38cc87401e347f14d0ae4d8 "pdflatex"
-  "main.out" 1781611255 5240 2441a4740ced44c7faf23fa96c3dd100 "pdflatex"
-  "main.tex" 1781611246 30417 d6f553fa5de1434ad6349c80dc547ba0 ""
-  "main.toc" 1781611255 2184 353d1a1a07fbe28ecb299554fb4cc8e9 "pdflatex"
+  "c:/Users/harry/Desktop/Project/DSP-IN-VLSI-Final/report/Latex/main.tex" 1781626354 30323 220aa6964972b692ed7c73e967c821b0 ""
+  "main.aux" 1781626364 9315 a0987755767a00fff211c4771cabc41c "pdflatex"
+  "main.out" 1781626364 5049 26f4db2950349f2fd1dd8833169c66d3 "pdflatex"
+  "main.tex" 1781626354 30323 220aa6964972b692ed7c73e967c821b0 ""
+  "main.toc" 1781626364 2101 c85d46ab05cc2dd523fc47f866656342 "pdflatex"
   (generated)
   "main.aux"
   "main.log"

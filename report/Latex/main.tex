@@ -272,6 +272,13 @@ They model gain compensation as $Q_B(X/K)$ only (divide by ideal $K$), then quan
 This is intentional, we do not want scaling-factor precision to enlarge global fractional bits $B$ and widen the entire systolic datapath.
 Therefore, Extra bits are spent only at this multiply-and-round point, not across the systolic array.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figure6.png}
+    \caption{RMSE vs.\ fractional bits of Scaling Factor ($1/K$).}
+    \label{fig:rmse-k-inv-frac}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{CORDIC Scaling Factor Configuration}
@@ -298,13 +305,11 @@ In our synthesis experiments, the CSD path introduces truncation error.
 A custom CSD design that meets the same accuracy requirement is larger than the constant multiplier optimized by Design Compiler.
 We therefore use the Design Compiler-optimized constant multiplier in the final RTL.
 
-% ─────────────────────────────────────────────
-\chapter{Section 2: Bit-True Model Verification}
-% ─────────────────────────────────────────────
 
-\section{RMSE Per Pattern}
+\section{Bit-True Model Verification}
 
-We evaluate the bit-true model on all 11 patterns in \texttt{Final11Pattern.mat} with $B = 11$, $N_{\mathrm{stage}} = 8$, and $\mathrm{MAX\_ITER} = 7$.
+We evaluate the bit-true model on all 11 patterns in \texttt{Final11Pattern.mat} with $B = 11$, $N_{\mathrm{stage}} = 8$, $\mathrm{MAX\_ITER} = 7$ and $ (1/K)= 16$.
+
 Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_v$ per pattern; both remain below $10^{-2}$.
 
 \begin{figure}[H]
@@ -317,7 +322,7 @@ Figure~\ref{fig:rmse-patterns} plots $\mathrm{RMSE}_\lambda$ and $\mathrm{RMSE}_
 \newpage
 
 % ─────────────────────────────────────────────
-\chapter{Section 3: Hardware Architecture and Control}
+\chapter{Section 2: Hardware Architecture and Control}
 % ─────────────────────────────────────────────
 
 \section{CORDIC PE Architecture}
@@ -464,7 +469,7 @@ $\mathbf{R}^{\mathsf{T}}$.
 
 
 % ─────────────────────────────────────────────
-\chapter{Section 4: Hardware Simulation}
+\chapter{Section 3: Hardware Simulation}
 % ─────────────────────────────────────────────
 
 \section{Behavioral Simulation}
@@ -545,7 +550,7 @@ Figure~\ref{fig:hw-consistency} shows pattern~8 as an example.
 \newpage
 
 % ─────────────────────────────────────────────
-\chapter{Section 5: Area-Time Product}
+\chapter{Section 4: Area-Time Product}
 
 The Area-Time Product (ATP) is used to evaluate the trade-off between hardware
 area and execution time. For each synthesis result, ATP is calculated as
@@ -621,7 +626,7 @@ provides the best area--timing trade-off.
 \newpage
 
 
-\chapter{Section 6: Design Innovations}
+\chapter{Section 5: Design Innovations}
 
 \section{Angle-Free CORDIC via Rotational Direction Recording}
 
@@ -674,7 +679,7 @@ the precision cost is confined to a single node instead of being paid array-wide
 
 
 % ─────────────────────────────────────────────
-\chapter{Section 7: Team Contributions}
+\chapter{Section 6: Team Contributions}
 % ─────────────────────────────────────────────
 
 \begin{table}[H]
