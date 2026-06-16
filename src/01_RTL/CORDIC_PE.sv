@@ -1,7 +1,7 @@
 /******************************************************************************
 * Copyright (C) 2026 Marco & Innis
 *
-* File Name:    CORDIC_PE_NEW.sv
+* File Name:    CORDIC_PE.sv
 * Project:      [Final Project] 2026 Spring DSP In VLSI @NTU <ICDA5003>
 * Module:       CORDIC_PE with Vectoring & Rotation Mode for EVD
 * Author:       Marco <harry2963753@gmail.com>
@@ -12,7 +12,7 @@
 ******************************************************************************/
 `include "define.vh"
 
-module CORDIC_PE_NEW (
+module CORDIC_PE (
     input clk,
     input rst_n,
     input InMode,
